@@ -23,7 +23,7 @@ permalink: /
   </nav>
 </div>
 <div id="sidebar">
-  <ul class="nav navbar-nav navbar-right" id="i18_navbar">
+  <ul id="i18_navbar">
     {% for section in site.data.landing %}
     <li>
       {% if section.page %}
@@ -44,9 +44,12 @@ permalink: /
     {% endfor %}
   </ul>
 </div>
+
+<!--
 {% if site.index_carousel %}
 {% include carousel.html %}
 {% endif %}
+-->
 
 {% for section in site.data.landing %}
 {% assign loopindex = forloop.index | modulo: 2 %}
@@ -72,6 +75,9 @@ iframe {
   width:200px;
   height: 100%;
   background:#151719
+}
+#sidebar ul{
+  padding-top: 80px 0px;
 }
 #sidebar ul li{
   color:rgba(230,230,230,0.9);
