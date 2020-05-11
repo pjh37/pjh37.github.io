@@ -3,6 +3,24 @@
   href: /blog/
 
 # edit following lines to custom your blog page, make sure name is the same as href but capitalized first letter(except HTML)
+- name: Android
+  href: /android/
+
+- name: Springboot
+  href: /springboot/
+
+- name: Nodejs
+  href: /nodejs/
+
+- name: Os
+  href: /os/
+
+- name: Network
+  href: /network/
+
+- name: DesignPattern
+  href: /DesignPattern/
+
 - name: Python
   href: /python/
 
@@ -14,9 +32,6 @@
 
 - name: Database
   href: /database/
-
-- name: Mac
-  href: /mac/
 
 - name: Life
   href: /life/
