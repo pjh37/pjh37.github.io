@@ -1,0 +1,17 @@
+I"�<h1 id="stack-원리와-구현">Stack 원리와 구현</h1>
+
+<hr />
+<h2 id="stack-원리">Stack 원리</h2>
+<h3 id="--곧-설명-들어간다">- 곧 설명 들어간다</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Stack</span><span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="k">struct</span> <span class="nc">Node</span><span class="p">{</span>
+        <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+        <span class="n">Node</span><span class="o">*</span> <span class="n">next</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+:ET

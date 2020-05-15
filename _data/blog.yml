@@ -21,8 +21,11 @@
 - name: DesignPattern
   href: /DesignPattern/
 
-- name: Python
-  href: /python/
+- name: DataStructure
+  href: /datastructure/
+
+- name: Algorithm
+  href: /algorithm/
 
 - name: Linux
   href: /linux/
