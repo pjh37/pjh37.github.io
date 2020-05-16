@@ -29,24 +29,24 @@ private:
 	int heap[10000];//배열의 크기는 알고리즘 문제등을 풀때 문제의 조건에 따라 정해주면 됩니다.
 	int heap_size;
 public:
-	Heap() :heap_size(0) {
+    Heap() :heap_size(0) {
 		memset(heap, 0, sizeof(heap));
 	}
 
 	void push(int data) {
-		int target = heap_size+1;
-		while (target != 1 && heap[target / 2] < data) {
-			heap[target] = heap[target / 2];
-			target /= 2;
-		}
-		heap[target] = data;
-		heap_size++;
-	}
+        int target = heap_size+1;
+        while (target != 1 && heap[target / 2] < data) {
+            heap[target] = heap[target / 2];
+            target /= 2;
+        }
+        heap[target] = data;
+        heap_size++;
+    }
 
-	void pop() {
-		int parent = 1, child = 2;
-		int temp = heap[heap_size];
-		while (true) {
+    void pop() {
+        int parent = 1, child = 2;
+        int temp = heap[heap_size];
+        while (true) {
 			if (child + 1 < heap_size&&heap[child] < heap[child + 1]) {
 				child++;
 			}
@@ -66,4 +66,27 @@ public:
 		return heap_size == 0;
 	}
 };
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+	
+    Heap* hp = new Heap();
+    hp->push(3);
+    hp->push(1);
+    hp->push(4);
+    hp->push(2);
+	hp->push(5);
+    while (!hp->isEmpty()) {
+        cout << hp->top() << " "; hp->pop();
+    }
+	
+    return 0;
+}
+```
+#### 결과
+
+``` c++
+5 4 3 2 1
+
 ```
