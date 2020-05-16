@@ -1,0 +1,45 @@
+I"�<h1 id="queue-원리와-구현">Queue 원리와 구현</h1>
+
+<hr />
+<h2 id="queue-원리">Queue 원리</h2>
+<h3 id="--먼저들어간-데이터가-먼저나온다-줄을-서-거나-등등-일상-대부분이-queue">- 먼저들어간 데이터가 먼저나온다. (줄을 서 거나 등등, 일상 대부분이 Queue)</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Queue</span><span class="p">{</span>
+<span class="nl">private:</span>
+    <span class="k">struct</span> <span class="nc">Node</span><span class="p">{</span>
+        <span class="kt">int</span> <span class="n">data</span><span class="p">;</span>
+        <span class="n">Node</span><span class="o">*</span> <span class="n">node</span><span class="p">;</span>
+    <span class="p">};</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">head</span><span class="p">;</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">rear</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">count</span><span class="p">;</span>
+<span class="nl">public:</span>
+
+    <span class="n">Queue</span><span class="p">()</span><span class="o">:</span><span class="n">count</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">head</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">),</span><span class="n">rear</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">){}</span>
+
+    <span class="kt">void</span> <span class="n">push</span><span class="p">(</span><span class="kt">int</span> <span class="n">data</span><span class="p">){</span>
+        <span class="n">Node</span><span class="o">*</span> <span class="n">node</span><span class="o">=</span><span class="k">new</span> <span class="n">Node</span><span class="p">();</span>
+        <span class="n">node</span><span class="o">-&gt;</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">isEmpty</span><span class="p">()){</span>
+            <span class="n">head</span><span class="o">=</span><span class="n">node</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="n">rear</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">=</span><span class="n">node</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">rear</span><span class="o">=</span><span class="n">node</span><span class="p">;</span>
+        <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="kt">void</span> <span class="n">pop</span><span class="p">(){</span>
+
+    <span class="p">}</span>
+
+    <span class="kt">int</span> <span class="n">front</span><span class="p">(){</span>
+
+    <span class="p">}</span>
+
+    <span class="kt">bool</span> <span class="n">isEmpty</span><span class="p">(){</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET
