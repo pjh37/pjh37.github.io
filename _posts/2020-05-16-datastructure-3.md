@@ -26,12 +26,12 @@ Heap 원리와 구현
 ``` c++
 class Heap {
 private:
-	int heap[10000];//배열의 크기는 알고리즘 문제등을 풀때 문제의 조건에 따라 정해주면 됩니다.
-	int heap_size;
+    int heap[10000];//배열의 크기는 알고리즘 문제등을 풀때 문제의 조건에 따라 정해주면 됩니다.
+    int heap_size;
 public:
     Heap() :heap_size(0) {
 		memset(heap, 0, sizeof(heap));
-	}
+    }
 
 	void push(int data) {
         int target = heap_size+1;
@@ -47,24 +47,24 @@ public:
         int parent = 1, child = 2;
         int temp = heap[heap_size];
         while (true) {
-			if (child + 1 < heap_size&&heap[child] < heap[child + 1]) {
-				child++;
+            if (child + 1 < heap_size&&heap[child] < heap[child + 1]) {
+                child++;
 			}
-			if (temp >= heap[child])break;
-			heap[parent] = heap[child];
-			parent = child;
-			child *= 2;
+            if (temp >= heap[child])break;
+            heap[parent] = heap[child];
+            parent = child;
+            child *= 2;
 		}
-		heap[parent] = temp;
-		heap_size--;
+        heap[parent] = temp;
+        heap_size--;
 	}
 
-	int top() {
-		return heap[1];
+    int top() {
+        return heap[1];
 	}
-	bool isEmpty() {
-		return heap_size == 0;
-	}
+    bool isEmpty() {
+        return heap_size == 0;
+    }
 };
 int main(){
     ios_base::sync_with_stdio(false);
