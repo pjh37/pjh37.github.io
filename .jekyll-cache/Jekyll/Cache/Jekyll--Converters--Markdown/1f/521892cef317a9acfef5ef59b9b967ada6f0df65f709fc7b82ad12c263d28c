@@ -1,4 +1,4 @@
-I"<h1 id="stack-원리와-구현">Stack 원리와 구현</h1>
+I"<h1 id="stack-원리와-구현">Stack 원리와 구현</h1>
 
 <hr />
 <h2 id="stack-원리">Stack 원리</h2>
@@ -38,7 +38,7 @@
     <span class="kt">bool</span> <span class="n">isEmpty</span><span class="p">(){</span>
         <span class="k">return</span> <span class="n">count</span><span class="o">==</span><span class="mi">0</span><span class="p">;</span>
     <span class="p">}</span>
-<span class="p">}</span>
+<span class="p">};</span>
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
     <span class="n">Stack</span><span class="o">*</span> <span class="n">st</span><span class="o">=</span><span class="k">new</span> <span class="n">Stack</span><span class="p">();</span>
     <span class="n">st</span><span class="o">-&gt;</span><span class="n">push</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>

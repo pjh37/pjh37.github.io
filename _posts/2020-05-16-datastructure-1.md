@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "  Stack에 대하여 "
+title:  " Stack에 대하여 "
 date:   2020-05-16
 desc: "c++ LinkedList 기반 구현, 원리"
 keywords: "c++,dataStructure"

@@ -54,7 +54,7 @@ public:
             heap[parent] = heap[child];
             parent = child;
             child *= 2;
-		}
+        }
         heap[parent] = temp;
         heap_size--;
 	}
