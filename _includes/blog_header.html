@@ -30,7 +30,7 @@
     </nav>
 </div>
 <div id="sidebar">
-    <ul>
+    <ul id="i18_navbar">
         <li><a class="page-scroll" href="{{ "blog/" | prepend: site.baseurl }}">{{ site.index.home }}</a></li>
         {% for tag in site.data.blog %}
             {% if tag.name != 'Donate' or site.donation %}
