@@ -1,0 +1,142 @@
+I"�8<h2 id="observer-패턴이란">Observer 패턴이란</h2>
+
+<h2 id="observer-패턴의-중요성">Observer 패턴의 중요성</h2>
+
+<h3 id="옵저버-패턴-구현-예시">옵저버 패턴 구현 예시</h3>
+<h4 id="우리가-넷플릭스나-유튜브등에서-서비스를-신청하거나-해당-채널을-구독하게-되면">우리가 넷플릭스나 유튜브등에서 서비스를 신청하거나 해당 채널을 구독하게 되면</h4>
+<h4 id="영상이나-영화가-추가-됬을때-구독자에게-알림이-간다-그리고-우리는-전체목록을">영상이나 영화가 추가 됬을때 구독자에게 알림이 간다. 그리고 우리는 전체목록을</h4>
+<h4 id="조회할-수도-있으며-구독을-해지할-수도-있다-이와같은-예시를-구현해보겠습니다">조회할 수도 있으며 구독을 해지할 수도 있다. 이와같은 예시를 구현해보겠습니다.</h4>
+
+<h3 id="인터페이스로-update함수를-구현하게-한다">인터페이스로 update함수를 구현하게 한다.</h3>
+<p><br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Observer</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">abstract</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h3 id="구독의-대상이-되는-객체가-가져야할-공통함수를-추상클래스로-만든다">구독의 대상이 되는 객체가 가져야할 공통함수를 추상클래스로 만든다.</h3>
+
+<p><br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Observable</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Observer</span><span class="o">&gt;</span> <span class="n">list</span><span class="o">=</span><span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">subscribe</span><span class="o">(</span><span class="nc">Observer</span> <span class="n">observer</span><span class="o">){</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">observer</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">disposable</span><span class="o">(</span><span class="nc">Observer</span> <span class="n">observer</span><span class="o">){</span>
+        <span class="n">list</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">observer</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">notifyObservers</span><span class="o">(){</span>
+        <span class="k">for</span><span class="o">(</span><span class="nc">Observer</span> <span class="nl">o:</span><span class="n">list</span><span class="o">){</span>
+            <span class="n">o</span><span class="o">.</span><span class="na">update</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br /></p>
+<h3 id="구독의-대상-구체-클래스-구현---예시의-넷플릭스나-유튜브-채널이라-생각하자">구독의 대상 구체 클래스 구현 -&gt; 예시의 넷플릭스나 유튜브 채널이라 생각하자</h3>
+<h3 id="영상이-추가될경우-구독자들에게-알림이-간다">영상이 추가될경우 구독자들에게 알림이 간다.</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MovieStore</span> <span class="kd">extends</span> <span class="nc">Observable</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">movies</span><span class="o">=</span><span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+    
+    <span class="c1">//새로운 영상이 추가되면 구독자들에게 통보</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="nc">String</span> <span class="n">movie</span><span class="o">){</span>
+        <span class="n">movies</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">movie</span><span class="o">);</span>
+        <span class="n">notifyObservers</span><span class="o">();</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="nf">getMovieList</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">movies</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+<h3 id="구독자들은-observer인터페이스를-받아-update함수를-override한다">구독자들은 Observer인터페이스를 받아 update함수를 Override한다.</h3>
+
+<h3 id="구독자-hong">구독자 Hong</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hong</span> <span class="kd">implements</span> <span class="nc">Observer</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">MovieStore</span> <span class="n">movieStore</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Hong</span><span class="o">(</span><span class="nc">MovieStore</span> <span class="n">movieStore</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">movieStore</span><span class="o">=</span><span class="n">movieStore</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Hong님 : "</span><span class="o">+</span><span class="s">"새로운 영화가 무비스토어에 들어왔습니다."</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="nf">getMovieList</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">movieStore</span><span class="o">.</span><span class="na">getMovieList</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+<p><br /></p>
+<h3 id="구독자-minsu">구독자 Minsu</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Minsu</span> <span class="kd">implements</span> <span class="nc">Observer</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">MovieStore</span> <span class="n">movieStore</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Minsu</span><span class="o">(</span><span class="nc">MovieStore</span> <span class="n">movieStore</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">movieStore</span><span class="o">=</span><span class="n">movieStore</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Minsu님 : "</span><span class="o">+</span><span class="s">"새로운 영화가 무비스토어에 들어왔습니다."</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="nf">getMovieList</span><span class="o">(){</span>
+        <span class="k">for</span><span class="o">(</span><span class="nc">String</span> <span class="nl">s:</span><span class="n">movieStore</span><span class="o">.</span><span class="na">getMovieList</span><span class="o">()){</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">movieStore</span><span class="o">.</span><span class="na">getMovieList</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<h3 id="메인클래스">메인클래스</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="c1">//영화를 판매하는 스토어</span>
+        <span class="nc">MovieStore</span> <span class="n">movieStore</span><span class="o">=</span><span class="k">new</span> <span class="nc">MovieStore</span><span class="o">();</span>
+
+        <span class="c1">//새로운 영화가 들어올경우 알림을 받고싶은 사람들</span>
+        <span class="nc">Hong</span> <span class="n">hong</span><span class="o">=</span><span class="k">new</span> <span class="nc">Hong</span><span class="o">(</span><span class="n">movieStore</span><span class="o">);</span>
+        <span class="nc">Minsu</span> <span class="n">minsu</span><span class="o">=</span><span class="k">new</span> <span class="nc">Minsu</span><span class="o">(</span><span class="n">movieStore</span><span class="o">);</span>
+
+        <span class="c1">//알림을 원하는 두 사람이 스토어에 구독 신청을 했다</span>
+        <span class="n">movieStore</span><span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="n">hong</span><span class="o">);</span>
+        <span class="n">movieStore</span><span class="o">.</span><span class="na">subscribe</span><span class="o">(</span><span class="n">minsu</span><span class="o">);</span>
+
+        <span class="n">movieStore</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"바람과 함께 사라지다"</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"--------------------"</span><span class="o">);</span>
+        <span class="n">movieStore</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"해리포터"</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"--------------------"</span><span class="o">);</span>
+        <span class="c1">//민수가 알림을 받고 목록을 받아본다</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"민수가 목록을 출력합니다"</span><span class="o">);</span>
+        <span class="n">minsu</span><span class="o">.</span><span class="na">getMovieList</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<h3 id="결과">결과</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Hong님</span> <span class="o">:</span> <span class="n">새로운</span> <span class="n">영화가</span> <span class="n">무비스토어에</span> <span class="n">들어왔습니다</span><span class="o">.</span>
+<span class="nc">Minsu님</span> <span class="o">:</span> <span class="n">새로운</span> <span class="n">영화가</span> <span class="n">무비스토어에</span> <span class="n">들어왔습니다</span><span class="o">.</span>
+<span class="o">--------------------</span>
+<span class="nc">Hong님</span> <span class="o">:</span> <span class="n">새로운</span> <span class="n">영화가</span> <span class="n">무비스토어에</span> <span class="n">들어왔습니다</span><span class="o">.</span>
+<span class="nc">Minsu님</span> <span class="o">:</span> <span class="n">새로운</span> <span class="n">영화가</span> <span class="n">무비스토어에</span> <span class="n">들어왔습니다</span><span class="o">.</span>
+<span class="o">--------------------</span>
+<span class="n">민수가</span> <span class="n">목록을</span> <span class="n">출력합니다</span>
+<span class="n">바람과</span> <span class="n">함께</span> <span class="n">사라지다</span>
+<span class="n">해리포터</span>
+
+</code></pre></div></div>
+:ET
