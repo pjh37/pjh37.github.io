@@ -3,17 +3,24 @@ layout: post
 title:  " [Java] Observer 패턴"
 date:   2020-05-24
 desc: "구독과 해지의 개념에서 보는 Observer패턴"
-keywords: "Datastructure"
-categories: [Datastructure]
-tags: [datastructure]
+keywords: "DesignPattern"
+categories: [Designpattern]
+tags: [designpattern]
 icon: icon-html
 ---
 
 Observer 패턴이란
 ------
-
+### 옵서버 패턴은 객체의 상태 변화를 관찰하는 구독자들, 즉 옵저버들의 목록을 객체에 등록하여 상태 변화가 있을 때마다 메서드 등을 통해 객체가 직접 목록의 각 옵저버에게 통지하도록 하는 디자인 패턴이다. 주로 분산 이벤트 핸들링 시스템을 구현하는 데 사용된다.
+<br/>
 Observer 패턴의 중요성
 ------
+### Observer 패턴은 매우 다양한 곳에서 활용 되는데 그중에서도 Reactive Programming에서 핵심 디자인 패턴으로 사용되고 있다. Reactive Programming이란 다음과 같다.
+
+#### 비동기적 데이터흐름을 처리하는 프로그래밍인데 모든 것을 비동기적인 데이터의 Stream으로 간주하고 Observer 디자인 패턴을 활용해서 이러한 비동기 이벤트를 처리하는 것을 말한다.
+#### 이외에도 많이 활용되고 있는 디자인 패턴이다.
+
+<br/>
 
 ### 옵저버 패턴 구현 예시
 #### 우리가 넷플릭스나 유튜브등에서 서비스를 신청하거나 해당 채널을 구독하게 되면 
