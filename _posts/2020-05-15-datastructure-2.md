@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  " Queue에 대하여 "
-date:   2020-05-16
+date:   2020-05-15
 desc: "c++ LinkedList 기반 구현, 원리"
 keywords: "c++,dataStructure"
 categories: [Datastructure]

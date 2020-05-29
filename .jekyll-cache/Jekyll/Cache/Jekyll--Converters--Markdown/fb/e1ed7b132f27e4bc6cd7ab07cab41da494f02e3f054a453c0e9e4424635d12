@@ -1,0 +1,25 @@
+I"�<h1 id="inversion-of-control">Inversion of control</h1>
+
+<h3 id="의존성에-대한-컨트롤이-뒤바꼈다">의존성에 대한 컨트롤이 뒤바꼈다.</h3>
+<h3 id="원래는-아래와-같은-코드-처럼-자신이-만들었다">원래는 아래와 같은 코드 처럼 자신이 만들었다</h3>
+<p><br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">OwnerController</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">OwnerRespository</span> <span class="n">repository</span><span class="o">=</span><span class="k">new</span> <span class="nc">OwnerRespository</span><span class="o">();</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+<p><br /></p>
+<h3 id="하지만-여기서-ioc가-될-경우">하지만 여기서 IOC가 될 경우</h3>
+<p><br /></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">OwnerController</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">OwnerRespository</span> <span class="n">repository</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">OwnerController</span><span class="o">(</span><span class="nc">OwnerRespository</span> <span class="n">repository</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">repository</span><span class="o">=</span><span class="n">repository</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+<p><br /></p>
+:ET
