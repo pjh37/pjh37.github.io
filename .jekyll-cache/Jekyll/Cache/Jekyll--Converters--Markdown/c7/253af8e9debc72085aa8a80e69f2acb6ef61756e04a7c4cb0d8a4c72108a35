@@ -1,0 +1,56 @@
+I"n<h2 id="jpa란-무엇이고-왜-사용하는가">JPA란 무엇이고 왜 사용하는가?</h2>
+
+<hr />
+
+<h2 id="jpa">JPA?</h2>
+<h3 id="--java-persistence-api">- JAVA Persistence API</h3>
+<h3 id="--자바-진영의-orm기술-표준">- 자바 진영의 ORM기술 표준</h3>
+
+<p><br /></p>
+<h2 id="ormobject-relational-mapping">ORM(Object-relational mapping)</h2>
+<blockquote>
+  <p>객체는 객체대로 설계<br />
+관계형 데이터베이스는 관계형 데이터베이스대로 설계<br />
+ORM 프레임워크가 중간에서 매핑<br />
+대중적인 언어에는 대부분 ORM 기술이 존재</p>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="jpa는-애플리케이션과-jdbc-사이에서-동작">JPA는 애플리케이션과 JDBC 사이에서 동작</h2>
+<p><img src="https://user-images.githubusercontent.com/37110261/84868933-58e38c00-b0b8-11ea-87e4-42dcd6a67ecb.PNG" alt="JPA" /></p>
+
+<p><br /></p>
+
+<h2 id="jpa를-사용하는-이유">JPA를 사용하는 이유</h2>
+<h3 id="--sql중심적인-개발에서-객체-중심으로-개발">- SQL중심적인 개발에서 객체 중심으로 개발</h3>
+<h3 id="--생산성">- 생산성</h3>
+<h3 id="--유지보수">- 유지보수</h3>
+<h3 id="--패러다임-불일치-해결">- 패러다임 불일치 해결</h3>
+<h3 id="--성능">- 성능</h3>
+<h3 id="--데이터-접근-추상화와-벤더-독립성">- 데이터 접근 추상화와 벤더 독립성</h3>
+<h3 id="--표준">- 표준</h3>
+
+<p><br /></p>
+
+<h2 id="생산성jpa--crud">생산성(jpa &amp; CRUD)</h2>
+<h3 id="-저장--jpasavemember">* 저장 : jpa.save(member)</h3>
+<h3 id="-조회--jpafindmemberid">* 조회 : jpa.find(memberId)</h3>
+<h3 id="-수정--membersetname변경이름">* 수정 : member.setName(“변경이름”)</h3>
+<h3 id="-삭제--jpadeletemember">* 삭제 : jpa.delete(member)</h3>
+
+<p><br /></p>
+
+<h2 id="유지보수-기존--필드변경시-모든-sql을-수정">유지보수 기존 : 필드변경시 모든 SQL을 수정</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">memberId</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">tel</span><span class="o">;</span><span class="c1">// 추가되는 항목</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Insert</span> <span class="k">into</span> <span class="n">member</span><span class="p">(</span><span class="n">member_ID</span><span class="p">,</span> <span class="n">NAME</span><span class="p">,</span><span class="n">TEL</span><span class="p">)</span> <span class="k">values</span> <span class="o">//</span> <span class="n">tel</span> <span class="err">추가</span>
+<span class="k">select</span> <span class="n">member_ID</span><span class="p">,</span> <span class="n">NAME</span><span class="p">,</span><span class="n">TEL</span> <span class="k">from</span> <span class="n">member</span> <span class="o">//</span><span class="n">tel</span> <span class="err">추가</span>
+<span class="k">update</span> <span class="n">member</span> <span class="k">set</span> <span class="p">...</span> <span class="n">tel</span><span class="o">=?</span> <span class="o">//</span><span class="n">tel</span><span class="err">추가</span>
+</code></pre></div></div>
+:ET

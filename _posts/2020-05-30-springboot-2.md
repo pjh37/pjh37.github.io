@@ -103,3 +103,17 @@ public String nameById(){
 String nameById;
 
 ```
+
+<br/>
+
+의존성 주입 (Dependency Injection -> DI라고 부름)
+=====
+
+## 일반적으로 @Autowired, @Inject를 붙힌다 어디에?
++ ### 생성자
++ ### 필드
++ ### Setter
+
+## 어노테이션이 안붙었을 경우에는 어떻게??
+### Bean이 되는 클래스에 생성자가 오직 하나만 있고 그 생성자의 매개변수가 빈으로 등록이 되어 있다면
+### 그 Bean을 주입해준다.

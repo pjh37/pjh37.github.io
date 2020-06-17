@@ -1,0 +1,151 @@
+I">0<h2 id="jpa란-무엇이고-왜-사용하는가">JPA란 무엇이고 왜 사용하는가?</h2>
+
+<hr />
+
+<h2 id="jpa">JPA?</h2>
+<h3 id="--java-persistence-api">- JAVA Persistence API</h3>
+<h3 id="--자바-진영의-orm기술-표준">- 자바 진영의 ORM기술 표준</h3>
+
+<p><br /></p>
+<h2 id="ormobject-relational-mapping">ORM(Object-relational mapping)</h2>
+<blockquote>
+  <p>객체는 객체대로 설계<br />
+관계형 데이터베이스는 관계형 데이터베이스대로 설계<br />
+ORM 프레임워크가 중간에서 매핑<br />
+대중적인 언어에는 대부분 ORM 기술이 존재</p>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="jpa는-애플리케이션과-jdbc-사이에서-동작">JPA는 애플리케이션과 JDBC 사이에서 동작</h2>
+<p><img src="https://user-images.githubusercontent.com/37110261/84868933-58e38c00-b0b8-11ea-87e4-42dcd6a67ecb.PNG" alt="JPA" /></p>
+
+<p><br /></p>
+
+<h2 id="jpa를-사용하는-이유">JPA를 사용하는 이유</h2>
+<h3 id="--sql중심적인-개발에서-객체-중심으로-개발">- SQL중심적인 개발에서 객체 중심으로 개발</h3>
+<h3 id="--생산성">- 생산성</h3>
+<h3 id="--유지보수">- 유지보수</h3>
+<h3 id="--패러다임-불일치-해결">- 패러다임 불일치 해결</h3>
+<h3 id="--성능">- 성능</h3>
+<h3 id="--데이터-접근-추상화와-벤더-독립성">- 데이터 접근 추상화와 벤더 독립성</h3>
+<h3 id="--표준">- 표준</h3>
+
+<p><br /></p>
+
+<h2 id="생산성jpa--crud">생산성(jpa &amp; CRUD)</h2>
+<h3 id="-저장--jpasavemember">+ 저장 : jpa.save(member)</h3>
+<h3 id="-조회--jpafindmemberid">+ 조회 : jpa.find(memberId)</h3>
+<h3 id="-수정--membersetname변경이름">+ 수정 : member.setName(“변경이름”)</h3>
+<h3 id="-삭제--jpadeletemember">+ 삭제 : jpa.delete(member)</h3>
+
+<p><br /></p>
+
+<h2 id="유지보수-기존--필드변경시-모든-sql을-수정">유지보수 기존 : 필드변경시 모든 SQL을 수정</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">memberId</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">tel</span><span class="o">;</span><span class="c1">// 추가되는 항목</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">Insert</span> <span class="k">into</span> <span class="n">member</span><span class="p">(</span><span class="n">member_ID</span><span class="p">,</span> <span class="n">NAME</span><span class="p">,</span><span class="n">TEL</span><span class="p">)</span> <span class="k">values</span> <span class="o">//</span> <span class="n">tel</span> <span class="err">추가</span>
+<span class="k">select</span> <span class="n">member_ID</span><span class="p">,</span> <span class="n">NAME</span><span class="p">,</span><span class="n">TEL</span> <span class="k">from</span> <span class="n">member</span> <span class="o">//</span><span class="n">tel</span> <span class="err">추가</span>
+<span class="k">update</span> <span class="n">member</span> <span class="k">set</span> <span class="p">...</span> <span class="n">tel</span><span class="o">=?</span> <span class="o">//</span><span class="n">tel</span><span class="err">추가</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">memberId</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">tel</span><span class="o">;</span><span class="c1">// 추가되는 항목</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<blockquote>
+  <p>JPA를 사용할 경우 필드만 추가하면 된다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="jpa에서-비교">JPA에서 비교</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span> <span class="n">memberId</span><span class="o">=</span><span class="s">"111"</span>
+<span class="nc">Member</span> <span class="n">member1</span><span class="o">=</span><span class="n">jpa</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">,</span><span class="n">memberId</span><span class="o">);</span>
+<span class="nc">Member</span> <span class="n">member2</span><span class="o">=</span><span class="n">jpa</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">,</span><span class="n">memberId</span><span class="o">);</span>
+<span class="n">member1</span><span class="o">==</span><span class="n">member2</span>
+</code></pre></div></div>
+<blockquote>
+  <p>동일한 트랜잭션에서 조회한 엔티티는 같음을 보장한다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="jpa의-성능-최적화-기능">JPA의 성능 최적화 기능</h2>
+<h3 id="1-1차-캐시와-동일성-보장">1. 1차 캐시와 동일성 보장</h3>
+<h3 id="2-트랜잭션을-지원하는-쓰기-지연">2. 트랜잭션을 지원하는 쓰기 지연</h3>
+<h3 id="3-지연로딩lazy-loading">3. 지연로딩(Lazy loading)</h3>
+
+<p><br /></p>
+<h3 id="1차-캐시와-동일성-보장">1차 캐시와 동일성 보장</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span> <span class="n">memberId</span><span class="o">=</span><span class="s">"111"</span>
+<span class="nc">Member</span> <span class="n">member1</span><span class="o">=</span><span class="n">jpa</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">,</span><span class="n">memberId</span><span class="o">);</span><span class="c1">// sql</span>
+<span class="nc">Member</span> <span class="n">member2</span><span class="o">=</span><span class="n">jpa</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">,</span><span class="n">memberId</span><span class="o">);</span><span class="c1">// 캐시</span>
+<span class="n">member1</span><span class="o">==</span><span class="n">member2</span><span class="c1">//true</span>
+</code></pre></div></div>
+<p><br /></p>
+<h3 id="트랜잭션을-지원하는-쓰기-지연">트랜잭션을 지원하는 쓰기 지연</h3>
+<h4 id="1-트랜잭션을-커밋할때까지-insert-sql을-모은다">1. 트랜잭션을 커밋할때까지 INSERT SQL을 모은다</h4>
+<h4 id="2-jdbc-batch-sql-기능을-사용해서-한번에-sql-전송">2. JDBC BATCH SQL 기능을 사용해서 한번에 SQL 전송</h4>
+
+<h4 id="insert">insert</h4>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">transaction</span><span class="o">.</span><span class="na">begin</span><span class="o">();</span>
+
+<span class="n">jpa</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">member1</span><span class="o">);</span>
+<span class="n">jpa</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">member2</span><span class="o">);</span>
+<span class="n">jpa</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="n">member3</span><span class="o">);</span>
+<span class="c1">//insert sql을 데이터베이스에 보내지 않는다.</span>
+
+<span class="n">transaction</span><span class="o">.</span><span class="na">commit</span><span class="o">();</span>
+<span class="c1">//커밋하는 순간 데이터베이스에 insert sql을 모아서 보낸다.</span>
+</code></pre></div></div>
+
+<p><br /></p>
+<h4 id="update">update</h4>
+<h4 id="1-updatedelete로-인한-row락-시간-최소화">1. UPDATE,DELETE로 인한 row락 시간 최소화</h4>
+<h4 id="2-트랜잭션-커밋-시-updatedelete-sql-실행하고-바로-커밋">2. 트랜잭션 커밋 시 UPDATE,DELETE SQL 실행하고 바로 커밋</h4>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">transaction</span><span class="o">.</span><span class="na">begin</span><span class="o">();</span>
+
+<span class="n">jpa</span><span class="o">.</span><span class="na">UPDATE</span><span class="o">(</span><span class="n">member1</span><span class="o">);</span>
+<span class="n">jpa</span><span class="o">.</span><span class="na">DELETE</span><span class="o">(</span><span class="n">member2</span><span class="o">);</span>
+<span class="n">비지니스_로직_실행</span><span class="o">();</span>
+<span class="c1">//비지니스 로직 수행동안 db로우 락이 걸리지 않는다.</span>
+
+<span class="n">transaction</span><span class="o">.</span><span class="na">commit</span><span class="o">();</span>
+<span class="c1">//커밋하는 순간 데이터베이스에 UPDATE,DELETE sql을 모아서 보낸다.</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="지연-로딩과-즉시-로딩">지연 로딩과 즉시 로딩</h2>
+<h3 id="-지연-로딩--객체가-실제-사용될-때-로딩">+ 지연 로딩 : 객체가 실제 사용될 때 로딩</h3>
+<h3 id="-즉시-로딩--join-sql로-한번에-연관된-객체까지-미리-조회">+ 즉시 로딩 : JOIN SQL로 한번에 연관된 객체까지 미리 조회</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//지연 로딩</span>
+<span class="nc">Member</span> <span class="n">member</span><span class="o">=</span><span class="n">memberDAO</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="n">memberId</span><span class="o">);</span> <span class="c1">// select * from member</span>
+<span class="nc">Team</span> <span class="n">team</span><span class="o">=</span><span class="n">member</span><span class="o">.</span><span class="na">getTeam</span><span class="o">();</span>
+<span class="nc">String</span> <span class="n">teamName</span><span class="o">=</span><span class="n">team</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span> <span class="c1">// select * from team</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//즉시 로딩</span>
+<span class="nc">Member</span> <span class="n">member</span><span class="o">=</span><span class="n">memberDAO</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="n">memberId</span><span class="o">);</span> <span class="c1">// select M.*,T.* from member join team ... </span>
+<span class="nc">Team</span> <span class="n">team</span><span class="o">=</span><span class="n">member</span><span class="o">.</span><span class="na">getTeam</span><span class="o">();</span>
+<span class="nc">String</span> <span class="n">teamName</span><span class="o">=</span><span class="n">team</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span> 
+</code></pre></div></div>
+<p><br /></p>
+
+<blockquote>
+  <p>연관된 객체를 가끔씩만 불러올때는 지연 로딩이 좋다.<br />
+연관된 객체를 항상 계속 사용해야 할 경우 즉시로딩으로 한번에 가져오는게 성능상 더 좋다.</p>
+</blockquote>
+:ET

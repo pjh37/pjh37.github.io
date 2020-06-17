@@ -1,0 +1,53 @@
+I"2<h1 id="aop">AOP</h1>
+<p><br /></p>
+
+<h2 id="흩어진-코드를-한곳으로-모으는-코딩-기법이다">흩어진 코드를 한곳으로 모으는 코딩 기법이다!!</h2>
+<h3 id="객체지향의-기본원칙을-적용해도-핵심기능에서-부가기능을-분리해서-모듈화하는-것은-어렵다">객체지향의 기본원칙을 적용해도 핵심기능에서 부가기능을 분리해서 모듈화하는 것은 어렵다</h3>
+<h3 id="aop는-핵심적인-기능에서-부가기능을-분리한다">AOP는 핵심적인 기능에서 부가기능을 분리한다.</h3>
+<h3 id="분리한-부가기능을-aspect라는-모듈형태로-만들어서-설계하고-개발하는-방법이다">분리한 부가기능을 Aspect라는 모듈형태로 만들어서 설계하고 개발하는 방법이다.</h3>
+<h3 id="어떻게--주로-proxy패턴을-사용한다">어떻게?  주로 proxy패턴을 사용한다.</h3>
+
+<p><br /></p>
+
+<h2 id="예시로-메소드의-실행시간을-측정하는-어노테이션만들어-보자">예시로 메소드의 실행시간을 측정하는 어노테이션만들어 보자</h2>
+
+<p><br /></p>
+
+<h2 id="logexecutiontime-어노테이션-어디에-적용할지-표시해두는-용도">@LogExecutionTime 어노테이션 (어디에 적용할지 표시해두는 용도)</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Target</span><span class="o">(</span><span class="nc">ElementType</span><span class="o">.</span><span class="na">METHOD</span><span class="o">)</span>
+<span class="nd">@Retention</span><span class="o">(</span><span class="nc">RetentionPolicy</span><span class="o">.</span><span class="na">RUNTIME</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nd">@interface</span> <span class="nc">LogExecutionTime</span><span class="o">{</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="실제-aspectlogexecutiontime-어노테이션-달린곳에-적용">실제 Aspect(@LogExecutionTime 어노테이션 달린곳에 적용)</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Component</span>
+<span class="nd">@Aspect</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">LogAspect</span><span class="o">{</span>
+    <span class="nc">Logger</span> <span class="n">logger</span><span class="o">=</span><span class="nc">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="nc">LogAspect</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="nd">@Around</span><span class="o">(</span><span class="s">"@annotation(LogExecutionTime)"</span><span class="o">)</span><span class="c1">//어디에 적용할지 범위 설정</span>
+    <span class="kd">public</span> <span class="nc">Object</span> <span class="nf">logExecutionTime</span><span class="o">(</span><span class="nc">ProceedingJoinPoint</span> <span class="n">joinPoint</span><span class="o">)</span><span class="kd">throws</span> <span class="nc">Throwable</span><span class="o">{</span>
+        <span class="nc">StopWatch</span> <span class="n">stopWatch</span><span class="o">=</span><span class="k">new</span> <span class="nc">StopWatch</span><span class="o">();</span><span class="c1">//spring 에서 제공하는 스톱워치</span>
+        <span class="n">stopWatch</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+        <span class="nc">Object</span> <span class="n">proceed</span><span class="o">=</span><span class="n">joinPoint</span><span class="o">.</span><span class="na">proceeod</span><span class="o">();</span>
+
+        <span class="n">stopWatch</span><span class="o">.</span><span class="na">stop</span><span class="o">();</span>
+        <span class="n">logger</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="n">stopWatch</span><span class="o">.</span><span class="na">prettyPrint</span><span class="o">());</span>
+        <span class="k">return</span> <span class="n">proceed</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="사용할때는-메소드-등에-어노테이션을-달면-로그에-함수의-작동시간이-출력되게-된다">사용할때는 메소드 등에 어노테이션을 달면 로그에 함수의 작동시간이 출력되게 된다.</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@LogExecutionTime</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">getMax</span><span class="o">(){</span>
+    <span class="o">....</span>
+<span class="o">}</span>
+</code></pre></div></div>
+:ET
