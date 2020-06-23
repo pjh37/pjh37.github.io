@@ -1,0 +1,215 @@
+I"�2<h2 id="jpa의-영속성-컨텍스트와-플러시">JPA의 영속성 컨텍스트와 플러시</h2>
+
+<hr />
+
+<h2 id="엔티티-매니저-팩토리와-엔티티-매니저">엔티티 매니저 팩토리와 엔티티 매니저</h2>
+
+<p><br /></p>
+
+<p><img src="https://user-images.githubusercontent.com/37110261/85383676-34d1f000-b57b-11ea-8244-6a6ea99831fa.PNG" alt="JPA" /></p>
+<h5 id="자바-orm-표준-jpa그림에서-가져옴">자바 ORM 표준 JPA그림에서 가져옴</h5>
+
+<p><br /></p>
+
+<h2 id="영속성-컨텍스트">영속성 컨텍스트</h2>
+<h3 id="--엔티티를-영구-저장하는-환경">- 엔티티를 영구 저장하는 환경</h3>
+<h3 id="--영속성-컨텍스트는-논리적-개념으로-눈에-보이지-않는다">- 영속성 컨텍스트는 논리적 개념으로 눈에 보이지 않는다.</h3>
+<h3 id="--엔티티-매니저를-통해서-영속성-컨텍스트에-접근">- 엔티티 매니저를 통해서 영속성 컨텍스트에 접근</h3>
+
+<p><br /></p>
+
+<h2 id="엔티티의-생명주기">엔티티의 생명주기</h2>
+<h3 id="--비영속newtransiend---영속성-컨텍스트와-전혀-관계가없는-새로운-상태">- 비영속(new/transiend) -&gt; 영속성 컨텍스트와 전혀 관계가없는 새로운 상태</h3>
+<h3 id="--영속managed---영속성-컨텍스트에-관리되는-상태">- 영속(managed) -&gt; 영속성 컨텍스트에 관리되는 상태</h3>
+<h3 id="--준영속detached---영속성-컨텍스트에-저장되었다가-분리된-상태">- 준영속(detached) -&gt; 영속성 컨텍스트에 저장되었다가 분리된 상태</h3>
+<h3 id="--삭제removed---삭제된-상태">- 삭제(removed) -&gt; 삭제된 상태</h3>
+
+<p><br /></p>
+
+<p><img src="https://user-images.githubusercontent.com/37110261/85384009-a7db6680-b57b-11ea-8a1f-004ee7fc6055.PNG" alt="생명주기그림" /></p>
+
+<p><br /></p>
+
+<h2 id="비영속">비영속</h2>
+<p><br />
+<img src="https://user-images.githubusercontent.com/37110261/85385592-72d01380-b57d-11ea-99ac-372a4c7624dd.PNG" alt="비영속" /></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//객체를 단순히 생성만 했을때 </span>
+<span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="s">"member1"</span><span class="o">,</span><span class="s">"회원1"</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="영속">영속</h2>
+<p><br />
+<img src="https://user-images.githubusercontent.com/37110261/85386906-21288880-b57f-11ea-8aa6-659e1306ca90.PNG" alt="영속" /></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="s">"member1"</span><span class="o">,</span><span class="s">"회원1"</span><span class="o">);</span>
+
+<span class="nc">EntityManagerFactory</span> <span class="n">emf</span><span class="o">=</span><span class="nc">Persistence</span><span class="o">.</span><span class="na">createEntityManagerFactory</span><span class="o">(</span><span class="err">'</span><span class="n">unit</span> <span class="n">name</span><span class="err">'</span><span class="o">);</span>
+<span class="nc">EntityManager</span> <span class="n">em</span><span class="o">=</span><span class="n">emf</span><span class="o">.</span><span class="na">createEntityManager</span><span class="o">();</span>
+<span class="n">em</span><span class="o">.</span><span class="na">getTransaction</span><span class="o">().</span><span class="na">begin</span><span class="o">();</span>
+
+<span class="c1">//객체 저장(영속)</span>
+<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h2 id="준영속삭제">준영속,삭제</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//회원 엔티티를 영속성 컨텍스트에서 분리, 준영속 상태</span>
+<span class="n">em</span><span class="o">.</span><span class="na">detach</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+
+<span class="c1">//객체를 삭제한 상태(삭제)</span>
+<span class="n">em</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h2 id="영속성-컨텍스트의-이점">영속성 컨텍스트의 이점</h2>
+<ul>
+  <li>
+    <h3 id="1차캐시">1차캐시</h3>
+  </li>
+  <li>
+    <h3 id="동일성-보장">동일성 보장</h3>
+  </li>
+  <li>
+    <h3 id="트랜잭션을-지원하는-쓰기-지연">트랜잭션을 지원하는 쓰기 지연</h3>
+  </li>
+  <li>
+    <h3 id="변경감지">변경감지</h3>
+  </li>
+  <li>
+    <h3 id="지연로딩lazy-loading">지연로딩(lazy loading)</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="1차-캐시에서-조회">1차 캐시에서 조회</h2>
+<h3 id="1차캐시에서-먼저-조회한뒤-없으면-db에서-조회한다">1차캐시에서 먼저 조회한뒤 없으면 DB에서 조회한다.</h3>
+<p><br /></p>
+
+<p><img src="https://user-images.githubusercontent.com/37110261/85389271-2dfaab80-b582-11ea-9e6a-09aa82fdf378.PNG" alt="1차캐시" /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Member</span> <span class="n">member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="s">"member1"</span><span class="o">,</span><span class="s">"회원1"</span><span class="o">);</span>
+
+<span class="c1">//1차 캐시에 저장된다.</span>
+<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">member</span><span class="o">);</span>
+
+<span class="c1">//1차캐시에서 조회</span>
+<span class="nc">Member</span> <span class="n">findMember</span><span class="o">=</span><span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="s">"member1"</span><span class="o">);</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="트랜잭션을-지원하는-쓰기-지연-1">트랜잭션을 지원하는 쓰기 지연</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">EntityManager</span> <span class="n">em</span><span class="o">=</span><span class="n">emf</span><span class="o">.</span><span class="na">createEntityManager</span><span class="o">();</span>
+<span class="nc">EntityTransaction</span> <span class="n">transaction</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">getTransaction</span><span class="o">();</span>
+
+<span class="c1">//엔티티 매니저는 데이터 변경시 트랜잭션을 시작해야 한다.</span>
+<span class="n">transaction</span><span class="o">.</span><span class="na">begin</span><span class="o">();</span><span class="c1">//트랜잭션 시작</span>
+
+<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">memberA</span><span class="o">);</span>
+<span class="n">em</span><span class="o">.</span><span class="na">persist</span><span class="o">(</span><span class="n">memberB</span><span class="o">);</span>
+
+<span class="c1">// 여기까지 insert을 데이터베이스에 보내지 않는다.</span>
+
+<span class="c1">//커밋하는 순간 데이터베이스에 insert sql 을 보낸다.</span>
+<span class="n">transaction</span><span class="o">.</span><span class="na">commit</span><span class="o">();</span><span class="c1">//커밋</span>
+</code></pre></div></div>
+
+<p><br />
+<img src="https://user-images.githubusercontent.com/37110261/85390365-b3329000-b583-11ea-8b23-552216de0e5a.PNG" alt="쓰기지연" /></p>
+
+<p><br /></p>
+
+<h2 id="변경-감지">변경 감지</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">EntityManager</span> <span class="n">em</span><span class="o">=</span><span class="n">emf</span><span class="o">.</span><span class="na">createEntityManager</span><span class="o">();</span>
+<span class="nc">EntityTransaction</span> <span class="n">transaction</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="na">getTransaction</span><span class="o">();</span>
+
+<span class="n">transaction</span><span class="o">.</span><span class="na">begin</span><span class="o">();</span><span class="c1">//트랜잭션 시작</span>
+
+<span class="c1">//영속 엔티티 조회 </span>
+<span class="nc">Member</span> <span class="n">memberA</span><span class="o">=</span><span class="n">em</span><span class="o">.</span><span class="na">find</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="na">class</span><span class="o">,</span><span class="s">"memberA"</span><span class="o">);</span>
+
+<span class="c1">//영속 엔티티 데이터 수정</span>
+<span class="n">memberA</span><span class="o">.</span><span class="na">setUsername</span><span class="o">(</span><span class="s">"aaa"</span><span class="o">);</span>
+<span class="n">memberA</span><span class="o">.</span><span class="na">setAge</span><span class="o">(</span><span class="mi">19</span><span class="o">);</span>
+
+<span class="c1">//em.update(member) &lt;= 이런 코드가 있어야 하는가????</span>
+
+<span class="n">transaction</span><span class="o">.</span><span class="na">commit</span><span class="o">();</span><span class="c1">//커밋</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h3 id="emupdatemember-필요업다">em.update(member) 필요업다.</h3>
+<h3 id="스냅샷을-찍어-놓고-변경을-감지하여-영속성-컨텍스트에서-업데이트-쿼리를-쓰기-지연-저장소에-넣어-놓고">스냅샷을 찍어 놓고 변경을 감지하여 영속성 컨텍스트에서 업데이트 쿼리를 쓰기 지연 저장소에 넣어 놓고</h3>
+<h3 id="플러시를-하여-업데이트를-데이터베이스에-반영한다">플러시를 하여 업데이트를 데이터베이스에 반영한다.</h3>
+
+<p><br />
+<img src="https://user-images.githubusercontent.com/37110261/85392135-16bdbd00-b586-11ea-89fe-d5020fabd927.PNG" alt="변경감지" /></p>
+
+<p><br /></p>
+<h2 id="플러시">플러시</h2>
+<blockquote>
+  <p>영속성 컨텍스트의 변경내용을 데이터베이스에 반영</p>
+</blockquote>
+
+<p><br /></p>
+
+<h3 id="플러시-발생">플러시 발생</h3>
+<ul>
+  <li>
+    <h3 id="변경-감지-1">변경 감지</h3>
+  </li>
+  <li>
+    <h3 id="수정된-엔티티-쓰기-지연-sql저장소에-등록">수정된 엔티티 쓰기 지연 sql저장소에 등록</h3>
+  </li>
+  <li>
+    <h3 id="쓰기-지연-sql-저장소의-쿼리등록수정삭제-쿼리를-데이터베이스에-전송">쓰기 지연 sql 저장소의 쿼리(등록,수정,삭제 쿼리)를 데이터베이스에 전송</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="영속성-컨텍스트를-플러시하는-방법">영속성 컨텍스트를 플러시하는 방법</h2>
+<ul>
+  <li>
+    <h3 id="emflush---직접-호출">em.flush() -&gt; 직접 호출</h3>
+  </li>
+  <li>
+    <h3 id="트랜잭션-commit---플러시-자동-호출">트랜잭션 commit -&gt; 플러시 자동 호출</h3>
+  </li>
+  <li>
+    <h3 id="jpql-쿼리-실행---플러시-자동-호출">JPQL 쿼리 실행 -&gt; 플러시 자동 호출</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="플러시-주의할-특징">플러시 주의할 특징</h2>
+<ul>
+  <li>
+    <h3 id="영속성-컨텍스트를-비우지-않는다">영속성 컨텍스트를 비우지 않는다.</h3>
+  </li>
+  <li>
+    <h3 id="영속성-컨텍스트의-변경내용을-데이터베이스에-동기화한다">영속성 컨텍스트의 변경내용을 데이터베이스에 동기화한다.</h3>
+  </li>
+  <li>
+    <h3 id="트랜잭션이라는-작업단위가-중요하다---커밋-직전에만-동기화-하면-됨">트랜잭션이라는 작업단위가 중요하다 -&gt; 커밋 직전에만 동기화 하면 됨</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="준영속-상태">준영속 상태</h2>
+<ul>
+  <li>
+    <h3 id="영속-상태의-엔티티가-영속성-컨텍스트에서-분리detached">영속 상태의 엔티티가 영속성 컨텍스트에서 분리(detached)</h3>
+  </li>
+  <li>
+    <h3 id="영속성-컨텍스트가-제공하는-기능을-사용-못함">영속성 컨텍스트가 제공하는 기능을 사용 못함</h3>
+  </li>
+</ul>
+:ET

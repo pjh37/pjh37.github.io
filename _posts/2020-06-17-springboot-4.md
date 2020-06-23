@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  " spring boot jpa -1"
+title:  " spring boot jpa - jpa란 무엇이며 왜 사용하는가"
 date:   2020-06-17
 desc: "spring boot jpa 입문"
 keywords: "springboot"

@@ -1,0 +1,21 @@
+I"}<h2 id="jpa의-엔티티-매핑">JPA의 엔티티 매핑</h2>
+
+<hr />
+
+<h2 id="entity">@Entity</h2>
+<ul>
+  <li>
+    <h3 id="entity가-붙은-클래스는-jpa가-관리">@Entity가 붙은 클래스는 JPA가 관리</h3>
+  </li>
+  <li>
+    <h3 id="jpa를-사용해서-테이블과-매핑할-클래슨는-entity필수">JPA를 사용해서 테이블과 매핑할 클래슨는 @Entity필수</h3>
+  </li>
+</ul>
+
+<blockquote>
+  <p>주의
+기본 생성자 필수(파라미터가 없는 public 또는 protected 생성자)<br />
+final 클래스, enum, interface, inner 클래스 사용 X<br />
+저장할 필드에 final 사용 X</p>
+</blockquote>
+:ET
