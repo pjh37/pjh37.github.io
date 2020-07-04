@@ -1,0 +1,33 @@
+I"T<h2 id="기본-설정">기본 설정</h2>
+
+<hr />
+
+<h2 id="applicationyml-프로젝트-디렉토리에-넣었음">application.yml (프로젝트 디렉토리에 넣었음)</h2>
+<p><img src="https://user-images.githubusercontent.com/37110261/86456073-80934f00-bd5c-11ea-955a-46602d113e60.PNG" alt="application설정" /></p>
+
+<h2 id="buildgradle-설정">build.gradle 설정</h2>
+<h3 id="spring-jpa-security-lombok은-개발및-편의를-위해-넣었습니다">spring jpa, security, lombok은 개발및 편의를 위해 넣었습니다.</h3>
+
+<blockquote>
+  <p>아래것만 있어도 기본적인 개발은 가능합니다.</p>
+  <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">compile</span><span class="o">(</span><span class="err">'</span><span class="n">org</span><span class="o">.</span><span class="na">springframework</span><span class="o">.</span><span class="na">boot</span><span class="o">:</span><span class="n">spring</span><span class="o">-</span><span class="n">boot</span><span class="o">-</span><span class="n">starter</span><span class="o">-</span><span class="n">web</span><span class="err">'</span><span class="o">)</span>
+</code></pre></div>  </div>
+  <p><img src="https://user-images.githubusercontent.com/37110261/86456081-82f5a900-bd5c-11ea-9af1-ce7d080101ee.PNG" alt="13" /></p>
+</blockquote>
+
+<p><br /></p>
+
+<h3 id="jpa-security-추가">jpa, security 추가</h3>
+
+<p><img src="https://user-images.githubusercontent.com/37110261/86456085-8426d600-bd5c-11ea-8f55-6790eb9a64b3.PNG" alt="jpa_security" /></p>
+
+<p><br /></p>
+
+<h3 id="생성자-getter-setter을-편하게-생성-시켜주는-lombok-추가">생성자, Getter, Setter을 편하게 생성 시켜주는 lombok 추가</h3>
+<p><img src="https://user-images.githubusercontent.com/37110261/86456089-85580300-bd5c-11ea-8891-e05461ffebae.PNG" alt="lombok" /></p>
+
+<p><br /></p>
+
+<h3 id="테스트-관련-의존성-추가">테스트 관련 의존성 추가</h3>
+<p><img src="https://user-images.githubusercontent.com/37110261/86456100-87ba5d00-bd5c-11ea-84b2-153241e08db3.PNG" alt="test" /></p>
+:ET

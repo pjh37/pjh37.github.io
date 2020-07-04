@@ -5,7 +5,7 @@ date:   2020-06-23
 desc: "spring boot jpa 입문"
 keywords: "springboot"
 categories: [Springboot]
-tags: [springboot]
+tags: [springboot,jpa]
 icon: icon-html
 ---
 

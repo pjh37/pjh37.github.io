@@ -1,0 +1,110 @@
+I"w<h2 id="jpa의-연관관계-매핑">JPA의 연관관계 매핑</h2>
+
+<hr />
+
+<h2 id="예제-시나리오">예제 시나리오</h2>
+<ul>
+  <li>
+    <h3 id="회원과-팀이-있다">회원과 팀이 있다.</h3>
+  </li>
+  <li>
+    <h3 id="회원은-하나의-팀에만-소속될-수-있다">회원은 하나의 팀에만 소속될 수 있다.</h3>
+  </li>
+  <li>
+    <h3 id="회원과-팀은-다대일-관계다">회원과 팀은 다대일 관계다.</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+<h2 id="단방향-매핑">단방향 매핑</h2>
+
+<p><br /></p>
+<h2 id="member">Member</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Member</span> <span class="o">{</span>
+    <span class="nd">@Id</span>
+    <span class="nd">@GeneratedValue</span><span class="o">(</span><span class="n">strategy</span> <span class="o">=</span> <span class="nc">GenerationType</span><span class="o">.</span><span class="na">AUTO</span><span class="o">)</span>
+    <span class="nd">@Column</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">"MEMBER_ID"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+    <span class="nd">@ManyToOne</span>
+    <span class="nd">@JoinColumn</span><span class="o">(</span><span class="n">name</span><span class="o">=</span><span class="s">"TEAM_ID"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="nc">Team</span> <span class="n">team</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+<h2 id="team">Team</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Team</span> <span class="o">{</span>
+    <span class="nd">@Id</span>
+    <span class="nd">@GeneratedValue</span>
+    <span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+<h3 id="사용할때">사용할때</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Team</span> <span class="n">team</span><span class="o">=</span><span class="k">new</span> <span class="nc">Team</span><span class="o">();</span>
+<span class="n">team</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"teamA"</span><span class="o">);</span>
+
+<span class="c1">//멤버에 팀을 id가 아니라 team자체를 set할수 있다.</span>
+
+<span class="nc">Member</span> <span class="n">member1</span><span class="o">=</span><span class="k">new</span> <span class="nc">Member</span><span class="o">();</span>
+<span class="n">member1</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"홍길동"</span><span class="o">);</span>
+<span class="n">member1</span><span class="o">.</span><span class="na">setTeam</span><span class="o">(</span><span class="n">team</span><span class="o">);</span>
+
+<span class="nc">Member</span> <span class="n">member2</span><span class="o">=</span><span class="k">new</span> <span class="nc">Member</span><span class="o">();</span>
+<span class="n">member2</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"둘리"</span><span class="o">);</span>
+<span class="n">member2</span><span class="o">.</span><span class="na">setTeam</span><span class="o">(</span><span class="n">team</span><span class="o">);</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="양방향-매핑member는-그대로-사용하고-team만-바꾸면됨">양방향 매핑(member는 그대로 사용하고 team만 바꾸면됨)</h2>
+<h3 id="team-1">Team</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Entity</span>
+<span class="nd">@Getter</span>
+<span class="nd">@Setter</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Team</span> <span class="o">{</span>
+    <span class="nd">@Id</span>
+    <span class="nd">@GeneratedValue</span>
+    <span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+
+    <span class="c1">//mappedBy의 이름은 Member에  @JoinColum(name="TEAM_ID") 어노테이션이 붙어있는 변수의 변수name이다.</span>
+    <span class="nd">@OneToMany</span><span class="o">(</span><span class="n">mappedBy</span> <span class="o">=</span> <span class="s">"team"</span><span class="o">)</span>
+    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Member</span><span class="o">&gt;</span> <span class="n">members</span><span class="o">=</span><span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="다대다-매핑">다대다 매핑</h2>
+<ul>
+  <li>
+    <h3 id="nm관계에-있는-테이블간의-매핑은-manytomany-쓰지말고-중간-연결-테이블을-하나더-만들어-매핑해야-한다">N:M관계에 있는 테이블간의 매핑은 @ManyToMany 쓰지말고 중간 연결 테이블을 하나더 만들어 매핑해야 한다.</h3>
+    <blockquote>
+      <p>@ManyToMany를 사용해서 매핑할경우 중간테이블을 jpa가 지멋대로 만들어 버린다.</p>
+    </blockquote>
+  </li>
+  <li>
+    <h3 id="현업에서는-중간테이블이-단순하지-않음으로-사용자가-중간테이블을-만들어-컨트롤-해야한다">현업에서는 중간테이블이 단순하지 않음으로 사용자가 중간테이블을 만들어 컨트롤 해야한다.</h3>
+  </li>
+</ul>
+
+<h2 id="연관관계-매핑의-주인">연관관계 매핑의 주인</h2>
+<ul>
+  <li>
+    <h3 id="fk가-있는-쪽이-연관관계-매핑의-주인으로-생각하자">FK가 있는 쪽이 연관관계 매핑의 주인으로 생각하자</h3>
+  </li>
+</ul>
+:ET

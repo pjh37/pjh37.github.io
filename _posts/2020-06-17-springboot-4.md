@@ -5,7 +5,7 @@ date:   2020-06-17
 desc: "spring boot jpa 입문"
 keywords: "springboot"
 categories: [Springboot]
-tags: [springboot]
+tags: [springboot,jpa]
 icon: icon-html
 ---
 
@@ -13,6 +13,7 @@ JPA란 무엇이고 왜 사용하는가?
 -----
 
 <hr/>
+
 
 ## JPA?
 ### - JAVA Persistence API
