@@ -1,0 +1,121 @@
+I"_?<h2 id="2020카카오-인턴십-수식최대화">2020카카오 인턴십 수식최대화</h2>
+
+<p><br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">pri</span><span class="o">=</span><span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="kd">static</span> <span class="kt">boolean</span><span class="o">[]</span> <span class="n">visited</span><span class="o">=</span><span class="k">new</span> <span class="kt">boolean</span><span class="o">[</span><span class="mi">3</span><span class="o">];</span>
+    <span class="kd">static</span> <span class="nc">String</span> <span class="n">expression</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="kt">long</span> <span class="n">answer</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+
+    <span class="c1">//연산자 우선순위</span>
+    <span class="kd">static</span> <span class="nc">Integer</span> <span class="nf">priority</span><span class="o">(</span><span class="kt">char</span> <span class="n">op</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">result</span><span class="o">=-</span><span class="mi">1</span><span class="o">;</span>
+        <span class="k">switch</span><span class="o">(</span><span class="n">op</span><span class="o">){</span>
+            <span class="k">case</span> <span class="sc">'+'</span><span class="o">:</span>
+                <span class="n">result</span><span class="o">=</span><span class="n">pri</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'-'</span><span class="o">:</span>
+                <span class="n">result</span><span class="o">=</span><span class="n">pri</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="k">case</span> <span class="sc">'*'</span><span class="o">:</span>
+                <span class="n">result</span><span class="o">=</span><span class="n">pri</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+                <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//중위순회 -&gt; 후위순회 변환</span>
+    <span class="kd">static</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="nf">infixToPostfix</span><span class="o">(</span><span class="nc">String</span> <span class="n">exp</span><span class="o">){</span>
+        <span class="nc">Stack</span><span class="o">&lt;</span><span class="nc">Character</span><span class="o">&gt;</span> <span class="n">st</span><span class="o">=</span><span class="k">new</span> <span class="nc">Stack</span><span class="o">();</span>
+        <span class="nc">StringBuilder</span> <span class="n">num</span><span class="o">=</span><span class="k">new</span> <span class="nc">StringBuilder</span><span class="o">();</span>
+        <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">pf</span><span class="o">=</span><span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+
+        <span class="kt">int</span> <span class="n">len</span><span class="o">=</span><span class="n">exp</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">len</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="kt">char</span> <span class="n">ch</span><span class="o">=</span><span class="n">exp</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="k">switch</span> <span class="o">(</span><span class="n">ch</span><span class="o">){</span>
+                <span class="k">case</span> <span class="sc">'+'</span><span class="o">:</span>
+                <span class="k">case</span> <span class="sc">'-'</span><span class="o">:</span>
+                <span class="k">case</span> <span class="sc">'*'</span><span class="o">:</span>
+                    <span class="n">pf</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">num</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+                    <span class="n">num</span><span class="o">.</span><span class="na">delete</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="n">num</span><span class="o">.</span><span class="na">length</span><span class="o">());</span>
+
+                    <span class="k">while</span><span class="o">(!</span><span class="n">st</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()&amp;&amp;</span><span class="n">priority</span><span class="o">(</span><span class="n">ch</span><span class="o">)&lt;=</span><span class="n">priority</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">peek</span><span class="o">())){</span>
+                        <span class="n">pf</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="nc">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">pop</span><span class="o">()));</span>
+                    <span class="o">}</span>
+                    <span class="n">st</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">ch</span><span class="o">);</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="k">default</span><span class="o">:</span>
+                    <span class="n">num</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">ch</span><span class="o">);</span>
+                    <span class="k">break</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="n">pf</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">num</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+
+        <span class="k">while</span><span class="o">(!</span><span class="n">st</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+            <span class="n">pf</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="nc">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">st</span><span class="o">.</span><span class="na">pop</span><span class="o">()));</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">pf</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//숫자 인지 연산자인지 판별</span>
+    <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isNum</span><span class="o">(</span><span class="nc">String</span> <span class="n">str</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">str</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"+"</span><span class="o">)||</span><span class="n">str</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"-"</span><span class="o">)||</span><span class="n">str</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"*"</span><span class="o">)){</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//후위식 계산</span>
+    <span class="kd">static</span> <span class="kt">long</span> <span class="nf">cal</span><span class="o">(</span><span class="nc">ArrayList</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">pf</span><span class="o">){</span>
+        <span class="nc">Stack</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">&gt;</span> <span class="n">stack</span><span class="o">=</span><span class="k">new</span> <span class="nc">Stack</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span><span class="o">(</span><span class="nc">String</span> <span class="nl">str:</span><span class="n">pf</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">isNum</span><span class="o">(</span><span class="n">str</span><span class="o">)){</span>
+                <span class="kt">long</span> <span class="n">op2</span><span class="o">=</span><span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+                <span class="kt">long</span> <span class="n">op1</span><span class="o">=</span><span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+                <span class="k">switch</span> <span class="o">(</span><span class="n">str</span><span class="o">){</span>
+                    <span class="k">case</span> <span class="s">"+"</span><span class="o">:</span>
+                        <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">op1</span><span class="o">+</span><span class="n">op2</span><span class="o">);</span>
+                        <span class="k">break</span><span class="o">;</span>
+                    <span class="k">case</span> <span class="s">"-"</span><span class="o">:</span>
+                        <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">op1</span><span class="o">-</span><span class="n">op2</span><span class="o">);</span>
+                        <span class="k">break</span><span class="o">;</span>
+                    <span class="k">case</span> <span class="s">"*"</span><span class="o">:</span>
+                        <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">op1</span><span class="o">*</span><span class="n">op2</span><span class="o">);</span>
+                        <span class="k">break</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="n">stack</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="nc">Long</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">str</span><span class="o">));</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">stack</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="c1">//연산자의 우선순위 뽑기</span>
+    <span class="kd">static</span> <span class="kt">void</span> <span class="nf">dfs</span><span class="o">(</span><span class="kt">int</span> <span class="n">idx</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">pri</span><span class="o">.</span><span class="na">size</span><span class="o">()==</span><span class="mi">3</span><span class="o">){</span>
+            <span class="n">answer</span><span class="o">=</span><span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">answer</span><span class="o">,</span><span class="nc">Math</span><span class="o">.</span><span class="na">abs</span><span class="o">(</span><span class="n">cal</span><span class="o">(</span><span class="n">infixToPostfix</span><span class="o">(</span><span class="n">expression</span><span class="o">))));</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">visited</span><span class="o">[</span><span class="n">i</span><span class="o">]){</span>
+                <span class="n">visited</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span><span class="kc">true</span><span class="o">;</span>
+                <span class="n">pri</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                <span class="n">dfs</span><span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+                <span class="n">pri</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">pri</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">);</span>
+                <span class="n">visited</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span><span class="kc">false</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="nc">Scanner</span> <span class="n">sc</span><span class="o">=</span><span class="k">new</span> <span class="nc">Scanner</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">in</span><span class="o">);</span>
+        <span class="n">expression</span><span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+        <span class="n">dfs</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">answer</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+:ET
