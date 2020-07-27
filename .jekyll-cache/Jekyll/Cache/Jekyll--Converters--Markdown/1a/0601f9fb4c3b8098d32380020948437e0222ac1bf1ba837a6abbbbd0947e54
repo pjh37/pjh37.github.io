@@ -1,0 +1,23 @@
+I"�<h1 id="그룹을-생성하고-영상을-공유하고-채팅을-나누다">그룹을 생성하고 영상을 공유하고 채팅을 나누다.</h1>
+<p><br /></p>
+
+<h3 id="--기간--202005202007-2개월">- 기간 : 2020.05~2020.07 (2개월)</h3>
+<h3 id="--인원--개인-프로젝트">- 인원 : 개인 프로젝트</h3>
+<h3 id="--github--httpsgithubcompjh37pjh-springboot-webservice">- Github : <a href="https://github.com/pjh37/pjh-springboot-webservice">https://github.com/pjh37/pjh-springboot-webservice</a></h3>
+
+<p><br /></p>
+
+<h1 id="사용-기술">사용 기술</h1>
+<hr />
+
+<h3 id="--spring-framework">- Spring Framework</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ ### spring security
++ ### jpa
++ ### lombok ### - RabbitMQ ### - MySQL
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h1 id="프로젝트-소개-및-기능">프로젝트 소개 및 기능</h1>
+<p><br /></p>
+:ET

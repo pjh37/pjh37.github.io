@@ -1,0 +1,211 @@
+I"Y_<h2 id="기본-설정">기본 설정</h2>
+<p>======</p>
+
+<h2 id="rabbitmq-cmd에-접속하여-stomp-plugins-활성화">rabbitmq cmd에 접속하여 stomp plugins 활성화</h2>
+
+<h3 id="rabbitmq-plugins-enable-rabbitmq_stomp-을-입력한다">rabbitmq-plugins enable rabbitmq_stomp 을 입력한다</h3>
+
+<p><br /></p>
+
+<h2 id="applicationyml-설정">application.yml 설정</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nl">spring:</span>
+    <span class="nl">rabbitmq:</span>
+        <span class="nl">host:</span> <span class="n">localhost</span>
+        <span class="nl">port:</span> <span class="mi">5672</span> <span class="c1">//ampq프로토콜연결 : 5672, stomp 프로토콜 연결 61613</span>
+        <span class="nl">username:</span> <span class="n">rabbitmq아이디</span>
+        <span class="nl">password:</span> <span class="n">rabbitmq비밀번호</span>
+        <span class="n">virtual</span><span class="o">-</span><span class="nl">host:</span> <span class="o">/</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="buildgradle-설정">build.gradle 설정</h2>
+<h3 id="dependencies-추가">dependencies 추가</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">//rabbitmq</span>
+<span class="n">implementation</span> <span class="err">'</span><span class="n">org</span><span class="o">.</span><span class="na">springframework</span><span class="o">.</span><span class="na">boot</span><span class="o">:</span><span class="n">spring</span><span class="o">-</span><span class="n">boot</span><span class="o">-</span><span class="n">starter</span><span class="o">-</span><span class="n">amqp</span><span class="err">'</span>    <span class="n">implementation</span> <span class="err">'</span><span class="n">com</span><span class="o">.</span><span class="na">fasterxml</span><span class="o">.</span><span class="na">jackson</span><span class="o">.</span><span class="na">core</span><span class="o">:</span><span class="n">jackson</span><span class="o">-</span><span class="n">databind</span><span class="err">'</span>
+
+<span class="n">implementation</span> <span class="err">'</span><span class="n">org</span><span class="o">.</span><span class="na">springframework</span><span class="o">.</span><span class="na">boot</span><span class="o">:</span><span class="n">spring</span><span class="o">-</span><span class="n">boot</span><span class="o">-</span><span class="n">starter</span><span class="o">-</span><span class="n">reactor</span><span class="o">-</span><span class="n">netty</span><span class="err">'</span>
+
+<span class="c1">//websocket</span>
+<span class="n">implementation</span> <span class="err">'</span><span class="n">org</span><span class="o">.</span><span class="na">springframework</span><span class="o">.</span><span class="na">boot</span><span class="o">:</span><span class="n">spring</span><span class="o">-</span><span class="n">boot</span><span class="o">-</span><span class="n">starter</span><span class="o">-</span><span class="n">websocket</span><span class="err">'</span>
+
+<span class="c1">//자바스크립트에서 가져다 쓸려고 추가했음</span>
+<span class="n">implementation</span> <span class="err">'</span><span class="n">org</span><span class="o">.</span><span class="na">webjars</span><span class="o">:</span><span class="n">sockjs</span><span class="o">-</span><span class="nl">client:</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">2</span><span class="err">'</span>
+<span class="n">implementation</span> <span class="err">'</span><span class="n">org</span><span class="o">.</span><span class="na">webjars</span><span class="o">:</span><span class="n">stomp</span><span class="o">-</span><span class="nl">websocket:</span><span class="mf">2.3</span><span class="o">.</span><span class="mi">3</span><span class="o">-</span><span class="mi">1</span><span class="err">'</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="config-설정">config 설정</h2>
+<h3 id="setsystemlogin-setsystempasscode-setclientlogin-setclientpasscode">setSystemLogin, setSystemPasscode, setClientLogin, setClientPasscode</h3>
+<h3 id="위의-set에서-4개다-꼭-해줘야-되고-rabbitmq접속-아이디비밀번호다">위의 set에서 4개다 꼭 해줘야 되고 rabbitmq접속 아이디,비밀번호다</h3>
+<h3 id="아이디비밀번호-설정을-안했다면-guestguest해라">아이디,비밀번호 설정을 안했다면 guest,guest해라</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Configuration</span>
+<span class="nd">@EnableWebSocketMessageBroker</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketConfig</span> <span class="kd">implements</span> <span class="nc">WebSocketMessageBrokerConfigurer</span> <span class="o">{</span>
+    <span class="nd">@Value</span><span class="o">(</span><span class="s">"${spring.rabbitmq.host}"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">host</span><span class="o">;</span>
+
+    <span class="nd">@Value</span><span class="o">(</span><span class="s">"${spring.rabbitmq.username}"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+    <span class="nd">@Value</span><span class="o">(</span><span class="s">"${spring.rabbitmq.password}"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">password</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">registerStompEndpoints</span><span class="o">(</span><span class="nc">StompEndpointRegistry</span> <span class="n">registry</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"host : "</span><span class="o">+</span><span class="n">host</span><span class="o">+</span><span class="s">" username : "</span><span class="o">+</span><span class="n">username</span><span class="o">+</span><span class="s">" password : "</span><span class="o">+</span><span class="n">password</span><span class="o">);</span>
+        <span class="n">registry</span><span class="o">.</span><span class="na">addEndpoint</span><span class="o">(</span><span class="s">"websocketApp"</span><span class="o">).</span><span class="na">setAllowedOrigins</span><span class="o">(</span><span class="s">"*"</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">withSockJS</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configureMessageBroker</span><span class="o">(</span><span class="nc">MessageBrokerRegistry</span> <span class="n">registry</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">registry</span><span class="o">.</span><span class="na">setApplicationDestinationPrefixes</span><span class="o">(</span><span class="s">"/app"</span><span class="o">);</span>
+        <span class="n">registry</span><span class="o">.</span><span class="na">enableStompBrokerRelay</span><span class="o">(</span><span class="s">"/topic"</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">setRelayHost</span><span class="o">(</span><span class="n">host</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">setRelayPort</span><span class="o">(</span><span class="mi">61613</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">setSystemLogin</span><span class="o">(</span><span class="n">username</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">setSystemPasscode</span><span class="o">(</span><span class="n">password</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">setClientLogin</span><span class="o">(</span><span class="n">username</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">setClientPasscode</span><span class="o">(</span><span class="n">password</span><span class="o">);</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="유저가-나갔을때-들어왔을-때-처리">유저가 나갔을때 들어왔을 때 처리</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nd">@Component</span>
+<span class="nd">@RequiredArgsConstructor</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketChatEventListener</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">Logger</span> <span class="n">log</span><span class="o">=</span> <span class="nc">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="nc">WebSocketChatEventListener</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">SimpMessageSendingOperations</span> <span class="n">messagingTemplate</span><span class="o">;</span>
+
+    <span class="nd">@Value</span><span class="o">(</span><span class="s">"${spring.rabbitmq.username}"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+    <span class="nd">@Value</span><span class="o">(</span><span class="s">"${spring.rabbitmq.password}"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">password</span><span class="o">;</span>
+
+    <span class="nd">@EventListener</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handleWebSocketConnectListener</span><span class="o">(</span><span class="nc">SessionConnectEvent</span> <span class="n">event</span><span class="o">){</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"==========="</span><span class="o">);</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"new web socket connection"</span><span class="o">);</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"==========="</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@EventListener</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handleWebSocketDisconnectListener</span><span class="o">(</span><span class="nc">SessionDisconnectEvent</span> <span class="n">event</span><span class="o">){</span>
+        <span class="nc">StompHeaderAccessor</span> <span class="n">headerAccessor</span><span class="o">=</span><span class="nc">StompHeaderAccessor</span><span class="o">.</span><span class="na">wrap</span><span class="o">(</span><span class="n">event</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+        <span class="nc">String</span> <span class="n">username</span><span class="o">=(</span><span class="nc">String</span><span class="o">)</span><span class="n">headerAccessor</span><span class="o">.</span><span class="na">getSessionAttributes</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="s">"username"</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">username</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nc">CustomMessage</span> <span class="n">chatMessage</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">CustomMessage</span><span class="o">(</span><span class="s">"Leave"</span><span class="o">,</span><span class="n">username</span><span class="o">,</span><span class="s">"나감"</span><span class="o">);</span>
+            <span class="n">messagingTemplate</span><span class="o">.</span><span class="na">convertAndSend</span><span class="o">(</span><span class="s">"/topic/public"</span><span class="o">,</span> <span class="n">chatMessage</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="controller">@Controller</h2>
+<h3 id="메세지-전달과-새로운-유저가-들어왔을-때-메세지-전달">메세지 전달과 새로운 유저가 들어왔을 때 메세지 전달</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WebSocketChatController</span> <span class="o">{</span>
+    <span class="nd">@MessageMapping</span><span class="o">(</span><span class="s">"/chat.sendMessage"</span><span class="o">)</span>
+    <span class="nd">@SendTo</span><span class="o">(</span><span class="s">"/topic/javainuse"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">CustomMessage</span> <span class="nf">sendMessage</span><span class="o">(</span><span class="nd">@Payload</span> <span class="nc">CustomMessage</span> <span class="n">webSocketChatMessage</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">webSocketChatMessage</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@MessageMapping</span><span class="o">(</span><span class="s">"/chat.newUser"</span><span class="o">)</span>
+    <span class="nd">@SendTo</span><span class="o">(</span><span class="s">"/topic/javainuse"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">CustomMessage</span> <span class="nf">newUser</span><span class="o">(</span><span class="nd">@Payload</span> <span class="nc">CustomMessage</span> <span class="n">webSocketChatMessage</span><span class="o">,</span>
+                                        <span class="nc">SimpMessageHeaderAccessor</span> <span class="n">headerAccessor</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">headerAccessor</span><span class="o">.</span><span class="na">getSessionAttributes</span><span class="o">().</span><span class="na">put</span><span class="o">(</span><span class="s">"username"</span><span class="o">,</span> <span class="n">webSocketChatMessage</span><span class="o">.</span><span class="na">getSender</span><span class="o">());</span>
+        <span class="k">return</span> <span class="n">webSocketChatMessage</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="frontend">frontend</h2>
+<h3 id="connect-receive-send">connect, receive, send</h3>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">stompClient</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">connect</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">홍길동</span><span class="dl">'</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//WebSocketConfig의 EndPoint</span>
+		<span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SockJS</span><span class="p">(</span><span class="dl">'</span><span class="s1">/websocketApp</span><span class="dl">'</span><span class="p">);</span> 
+		<span class="nx">stompClient</span> <span class="o">=</span> <span class="nx">Stomp</span><span class="p">.</span><span class="nx">over</span><span class="p">(</span><span class="nx">socket</span><span class="p">);</span>
+
+		<span class="nx">stompClient</span><span class="p">.</span><span class="nx">connect</span><span class="p">({},</span> <span class="nx">connectionSuccess</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">connectionSuccess</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">str</span><span class="o">=</span><span class="dl">'</span><span class="s1">&lt;div&gt;</span><span class="dl">'</span><span class="o">+</span><span class="dl">'</span><span class="s1">연결성공</span><span class="dl">'</span> <span class="o">+</span><span class="dl">'</span><span class="s1">&lt;/div&gt;</span><span class="dl">'</span>
+    <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#messageList</span><span class="dl">'</span><span class="p">).</span><span class="nx">prepend</span><span class="p">(</span><span class="nx">str</span><span class="p">);</span>
+
+    <span class="c1">//sendTo("/topic/javainuse") 로 들어오는 메세지를 받겠다</span>
+	<span class="nx">stompClient</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="dl">'</span><span class="s1">/topic/javainuse</span><span class="dl">'</span><span class="p">,</span> <span class="nx">onMessageReceived</span><span class="p">);</span>
+
+	<span class="nx">stompClient</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">"</span><span class="s2">/app/chat.newUser</span><span class="dl">"</span><span class="p">,</span> <span class="p">{},</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+		<span class="na">sender</span> <span class="p">:</span> <span class="nx">name</span><span class="p">,</span>
+		<span class="na">type</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">newUser</span><span class="dl">'</span>
+	<span class="p">}))</span>
+
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">sendMessage</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">messageContent</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#content</span><span class="dl">'</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="nx">messageContent</span> <span class="o">&amp;&amp;</span> <span class="nx">stompClient</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">chatMessage</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="na">sender</span> <span class="p">:</span> <span class="nx">name</span><span class="p">,</span>
+			<span class="na">content</span> <span class="p">:</span> <span class="nx">messageContent</span><span class="p">,</span>
+			<span class="na">type</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">CHAT</span><span class="dl">'</span>
+		<span class="p">};</span>
+
+		<span class="nx">stompClient</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="dl">"</span><span class="s2">/app/chat.sendMessage</span><span class="dl">"</span><span class="p">,</span> <span class="p">{},</span> <span class="nx">JSON</span>
+				<span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">chatMessage</span><span class="p">));</span>
+		<span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#content</span><span class="dl">'</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="dl">''</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">onMessageReceived</span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">msgList</span><span class="o">=</span><span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#messageList</span><span class="dl">'</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">newUser</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">msgList</span><span class="p">.</span><span class="nx">prepend</span><span class="p">(</span><span class="dl">'</span><span class="s1">&lt;div&gt;</span><span class="dl">'</span><span class="o">+</span><span class="dl">'</span><span class="s1">새로운 유저 입장 </span><span class="dl">'</span><span class="o">+</span><span class="nx">message</span><span class="p">.</span><span class="nx">sender</span> <span class="o">+</span><span class="dl">'</span><span class="s1">&lt;/div&gt;</span><span class="dl">'</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">Leave</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">msgList</span><span class="p">.</span><span class="nx">prepend</span><span class="p">(</span><span class="dl">'</span><span class="s1">&lt;div&gt;</span><span class="dl">'</span><span class="o">+</span><span class="dl">'</span><span class="s1"> 유저 떠남 </span><span class="dl">'</span><span class="o">+</span><span class="nx">message</span><span class="p">.</span><span class="nx">sender</span> <span class="o">+</span><span class="dl">'</span><span class="s1">&lt;/div&gt;</span><span class="dl">'</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">msgList</span><span class="p">.</span><span class="nx">prepend</span><span class="p">(</span><span class="dl">'</span><span class="s1">&lt;div&gt;</span><span class="dl">'</span><span class="o">+</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span> <span class="o">+</span><span class="dl">'</span><span class="s1">&lt;/div&gt;</span><span class="dl">'</span><span class="p">);</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+:ET
