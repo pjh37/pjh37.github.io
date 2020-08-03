@@ -1,0 +1,26 @@
+I"w<h1 id="springboot--gradle--docker-windows환경">springboot + Gradle + docker (windows환경)</h1>
+
+<p><br /></p>
+
+<h3 id="--windows-home-버전-에서-docker를-설치해야-한다">- windows Home 버전 에서 docker를 설치해야 한다.</h3>
+<h3 id="--보통-docker은-windows환경에서-사용하기-매우-불편하다">- 보통 docker은 windows환경에서 사용하기 매우 불편하다.</h3>
+<h3 id="--구글에-검색해봐도-windows-enterprise-pro버전이어야-한다는-조건을-명시한다--home버전은-어쩌라는건지-모르겠다">- 구글에 검색해봐도 windows enterprise, pro버전이어야 한다는 조건을 명시한다.(&lt;- home버전은 어쩌라는건지 모르겠다!)</h3>
+<h3 id="--대부분의-거의-대다수의-사용자는-windows-home-버전일-것이다">- 대부분의 거의 대다수의 사용자는 windows Home 버전일 것이다.</h3>
+<h3 id="--현업에서-gradle을-많이-사용함에도-불구하고-maven으로-된-구글-검색-결과가-많다">- 현업에서 gradle을 많이 사용함에도 불구하고 maven으로 된 구글 검색 결과가 많다.</h3>
+<h3 id="--이-포스팅으로-windows-home-버전을-사용하는-분들이-spring-bootgradle를-docker로-좀더-쉽게-배포-이미지를-만들-수-있기를-바랍니다">- 이 포스팅으로 windows Home 버전을 사용하는 분들이 spring boot+gradle를 docker로 좀더 쉽게 배포 이미지를 만들 수 있기를 바랍니다.</h3>
+
+<p><br /></p>
+
+<h1 id="docker-toolbox-설치하기">docker toolbox 설치하기</h1>
+
+<p><br /></p>
+
+<h3 id="docker-toolboxhttpsgithubcomdockertoolboxreleases-next-버튼-누르다-보면-설치가-완료-됩니다">[docker toolbox]:https://github.com/docker/toolbox/releases next 버튼 누르다 보면 설치가 완료 됩니다.</h3>
+<h3 id="docker-quickstart-terminal이-생성되고-이-터미널을-사용해서-docker를-다룰-수-있습니다">docker quickstart terminal이 생성되고 이 터미널을 사용해서 docker를 다룰 수 있습니다.</h3>
+<p><br /></p>
+<h3 id="docker는-준비완료">docker는 준비완료</h3>
+
+<p><br /></p>
+
+<h2 id="spring">spring</h2>
+:ET

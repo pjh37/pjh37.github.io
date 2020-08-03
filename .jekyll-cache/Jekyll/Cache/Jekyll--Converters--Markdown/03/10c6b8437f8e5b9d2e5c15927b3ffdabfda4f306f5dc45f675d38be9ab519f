@@ -1,0 +1,116 @@
+I"f<h1 id="springboot--gradle--docker-windows환경">springboot + Gradle + docker (windows환경)</h1>
+
+<p><br /></p>
+
+<h3 id="--windows-home-버전-에서-docker를-설치해야-한다">- windows Home 버전 에서 docker를 설치해야 한다.</h3>
+<h3 id="--보통-docker은-windows환경에서-사용하기-매우-불편하다">- 보통 docker은 windows환경에서 사용하기 매우 불편하다.</h3>
+<h3 id="--구글에-검색해봐도-windows-enterprise-pro버전이어야-한다는-조건을-명시한다--home버전은-어쩌라는건지-모르겠다">- 구글에 검색해봐도 windows enterprise, pro버전이어야 한다는 조건을 명시한다.(&lt;- home버전은 어쩌라는건지 모르겠다!)</h3>
+<h3 id="--대부분의-거의-대다수의-사용자는-windows-home-버전일-것이다">- 대부분의 거의 대다수의 사용자는 windows Home 버전일 것이다.</h3>
+<h3 id="--현업에서-gradle을-많이-사용함에도-불구하고-maven으로-된-구글-검색-결과가-많다">- 현업에서 gradle을 많이 사용함에도 불구하고 maven으로 된 구글 검색 결과가 많다.</h3>
+<h3 id="--이-포스팅으로-windows-home-버전을-사용하는-분들이-spring-bootgradle를-docker로-좀더-쉽게-배포-이미지를-만들-수-있기를-바랍니다">- 이 포스팅으로 windows Home 버전을 사용하는 분들이 spring boot+gradle를 docker로 좀더 쉽게 배포 이미지를 만들 수 있기를 바랍니다.</h3>
+
+<p><br /></p>
+
+<h1 id="docker-toolbox-설치하기">docker toolbox 설치하기</h1>
+
+<p><br /></p>
+
+<h3 id="docker-toolboxhttpsgithubcomdockertoolboxreleases-next-버튼-누르다-보면-설치가-완료-됩니다">[docker toolbox]:https://github.com/docker/toolbox/releases next 버튼 누르다 보면 설치가 완료 됩니다.</h3>
+<h3 id="docker-quickstart-terminal이-생성되고-이-터미널을-사용해서-docker를-다룰-수-있습니다">docker quickstart terminal이 생성되고 이 터미널을 사용해서 docker를 다룰 수 있습니다.</h3>
+<p><br /></p>
+<h3 id="docker는-준비완료">docker는 준비완료</h3>
+
+<p><br /></p>
+
+<h1 id="spring-설정하기">spring 설정하기</h1>
+
+<p><br /></p>
+
+<ul>
+  <li>
+    <h3 id="bootjar을-이용해-jar파일을-생성합니다">bootJar을 이용해 .jar파일을 생성합니다.</h3>
+  </li>
+  <li>
+    <h3 id="bootjar을-더블클릭하면-생성됩니다">bootJar을 더블클릭하면 생성됩니다.</h3>
+    <p><img src="https://user-images.githubusercontent.com/37110261/89183946-006a3e80-d5d3-11ea-83ff-647afcd48cf6.PNG" alt="bootJar" /></p>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<ul>
+  <li>
+    <h3 id="jar파일의-생성위치-buildlibs">jar파일의 생성위치 build/libs</h3>
+    <p><img src="https://user-images.githubusercontent.com/37110261/89183953-019b6b80-d5d3-11ea-89da-becf0616cb23.PNG" alt="jar경로" /></p>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<ul>
+  <li>
+    <h3 id="최상단-프로젝트에-dockerfile을-생성합니다">최상단 프로젝트에 Dockerfile을 생성합니다.</h3>
+    <p><img src="https://user-images.githubusercontent.com/37110261/89183393-1f1c0580-d5d2-11ea-9f36-5ba91f51e1b0.PNG" alt="경로" /></p>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<ul>
+  <li>
+    <h3 id="dockerfile-작성">Dockerfile 작성</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">#</span> <span class="n">spring을</span> <span class="n">어떤</span> <span class="n">jdk버전위에서</span> <span class="n">돌리냐에</span> <span class="n">따라</span> <span class="n">다릅니다</span><span class="o">.</span> <span class="n">저는</span> <span class="n">jdk11을</span> <span class="n">사용했습니다</span><span class="o">.</span>
+<span class="no">FROM</span> <span class="n">adoptopenjdk</span><span class="o">/</span><span class="nl">openjdk11:</span><span class="n">ubi</span>
+
+<span class="err">#</span> <span class="n">사용자</span>
+<span class="no">LABEL</span> <span class="n">maintainer</span><span class="o">=</span><span class="n">사용자</span><span class="nd">@gmail</span><span class="o">.</span><span class="na">com</span>
+
+<span class="err">#</span> <span class="n">manifest파일</span> <span class="n">경로</span>
+<span class="no">VOLUME</span> <span class="o">/</span><span class="n">tmp</span>
+
+<span class="err">#</span> <span class="n">컨테이너가</span> <span class="n">열어줄</span> <span class="n">포트</span> <span class="n">번호를</span> <span class="n">지정합니다</span><span class="o">.</span>
+<span class="no">EXPOSE</span> <span class="mi">8080</span>
+
+<span class="err">#</span> <span class="n">jar</span> <span class="n">file</span> <span class="n">결정</span>
+<span class="no">ARG</span> <span class="no">JAR_FILE</span><span class="o">=</span><span class="n">build</span><span class="o">/</span><span class="n">libs</span><span class="o">/*.</span><span class="na">jar</span>
+
+<span class="err">#</span> <span class="n">지정된</span> <span class="n">jar파일을</span> <span class="n">이름</span><span class="o">.</span><span class="na">jar로</span> <span class="n">생성</span>
+<span class="no">ADD</span> <span class="err">$</span><span class="o">{</span><span class="no">JAR_FILE</span><span class="o">}</span> <span class="n">springboot</span><span class="o">-</span><span class="n">chat</span><span class="o">-</span><span class="n">streaming</span><span class="o">.</span><span class="na">jar</span>
+
+<span class="err">#</span> <span class="nc">Run</span> <span class="n">the</span> <span class="n">jar</span> <span class="n">file</span>
+<span class="no">ENTRYPOINT</span> <span class="o">[</span><span class="s">"java"</span><span class="o">,</span><span class="s">"-Djava.security.egd=file:/dev/./urandom"</span><span class="o">,</span><span class="s">"-jar"</span><span class="o">,</span><span class="s">"/springboot-chat-streaming.jar"</span><span class="o">]</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h1 id="docker-image-생성하기">Docker image 생성하기</h1>
+
+<p><br /></p>
+
+<ul>
+  <li>
+    <h3 id="docker-quickstart-terminal접속합니다">docker quickstart terminal접속합니다.</h3>
+  </li>
+  <li>
+    <h3 id="만들고-있는-spring-boot-project-경로로-들어갑니다">만들고 있는 spring boot project 경로로 들어갑니다.</h3>
+  </li>
+  <li>
+    <h3 id="build를">build를</h3>
+    <p><br />
+``` java
+docker build -t docker springboot-chat-streaming . // &lt;- 요 . 부분까지 입력하셔야 합니다.
+// dockerfile에서 ADD ${JAR_FILE} springboot-chat-streaming.jar 에서 springboot-chat-streaming부분 입력</p>
+  </li>
+</ul>
+
+<p>```
+<br /></p>
+
+<p>###</p>
+:ET
