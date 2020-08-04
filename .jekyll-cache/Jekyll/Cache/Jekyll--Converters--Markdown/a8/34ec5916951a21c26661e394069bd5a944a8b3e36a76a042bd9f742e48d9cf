@@ -1,0 +1,29 @@
+I"9<h2 id="2019-카카오-겨울-인턴-튜플-java">2019 카카오 겨울 인턴 튜플 [Java]</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">solution</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">idx</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+        <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">set</span><span class="o">=</span><span class="k">new</span> <span class="nc">HashSet</span><span class="o">&lt;&gt;();</span>
+        
+        <span class="nc">String</span><span class="o">[]</span> <span class="n">str</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">"[{]"</span><span class="o">,</span><span class="s">" "</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">"[}]"</span><span class="o">,</span><span class="s">" "</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">trim</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">" , "</span><span class="o">);</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">str</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+        
+        <span class="nc">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">str</span><span class="o">,(</span><span class="n">a</span><span class="o">,</span><span class="n">b</span><span class="o">)-&gt;{</span><span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">()-</span><span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">();});</span>
+        <span class="k">for</span><span class="o">(</span><span class="nc">String</span> <span class="nl">s1:</span><span class="n">str</span><span class="o">){</span>
+            <span class="k">for</span><span class="o">(</span><span class="nc">String</span> <span class="nl">s2:</span><span class="n">s1</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">","</span><span class="o">)){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">s2</span><span class="o">)){</span>
+                    <span class="n">arr</span><span class="o">[</span><span class="n">idx</span><span class="o">++]=</span><span class="nc">Integer</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">s2</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">arr</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+:ET
