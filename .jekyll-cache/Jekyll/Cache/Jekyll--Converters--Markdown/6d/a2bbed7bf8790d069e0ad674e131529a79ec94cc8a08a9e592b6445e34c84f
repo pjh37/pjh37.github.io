@@ -1,0 +1,73 @@
+I"�!<h2 id="2019-카카오-겨울-인턴-튜플-java">2019 카카오 겨울 인턴 튜플 [Java]</h2>
+
+<p><br /></p>
+
+<h2 id="문제의도">문제의도</h2>
+<ul>
+  <li>
+    <h3 id="dfs를-활용할줄-아는가">dfs를 활용할줄 아는가?</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="문제-풀이-방법2가지">문제 풀이 방법(2가지)</h2>
+<ol>
+  <li>
+    <h3 id="dfs를-활용하여-baned항목을-추출한뒤-set자료구조로-중복-구분">dfs를 활용하여 baned항목을 추출한뒤 set자료구조로 중복 구분</h3>
+  </li>
+  <li>
+    <h3 id="비트연산을-이용하여-푸는-방법--추후-풀이-추가-예정">비트연산을 이용하여 푸는 방법(&lt;- 추후 풀이 추가 예정)</h3>
+  </li>
+</ol>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="nc">Boolean</span><span class="o">[]</span> <span class="n">used</span><span class="o">=</span><span class="k">new</span> <span class="nc">Boolean</span><span class="o">[</span><span class="mi">8</span><span class="o">];</span>
+
+    <span class="c1">//순서에 관계 없이 내용이 동일 하면 같은 것을 처리하기 위해 set자료구조 활용</span>
+    <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">set</span><span class="o">=</span><span class="k">new</span> <span class="nc">HashSet</span><span class="o">&lt;&gt;();</span>
+
+    <span class="c1">//user와 baned id 검사</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">check</span><span class="o">(</span><span class="nc">String</span> <span class="n">user</span><span class="o">,</span><span class="nc">String</span> <span class="n">banned</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">length</span><span class="o">()!=</span><span class="n">banned</span><span class="o">.</span><span class="na">length</span><span class="o">())</span><span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">user</span><span class="o">.</span><span class="na">length</span><span class="o">();</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)!=</span><span class="n">banned</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)&amp;&amp;</span><span class="n">banned</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)!=</span><span class="sc">'*'</span><span class="o">){</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">dfs</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">user_id</span><span class="o">,</span> <span class="nc">String</span><span class="o">[]</span> <span class="n">banned_id</span><span class="o">,</span><span class="kt">int</span> <span class="n">banIdx</span><span class="o">){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">banIdx</span><span class="o">==</span><span class="n">banned_id</span><span class="o">.</span><span class="na">length</span><span class="o">){</span>
+            <span class="nc">String</span> <span class="n">users</span><span class="o">=</span><span class="s">""</span><span class="o">;</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">user_id</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">]){</span>
+                    <span class="n">users</span><span class="o">+=</span><span class="n">user_id</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>  
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">users</span><span class="o">);</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">user_id</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">]&amp;&amp;</span><span class="n">check</span><span class="o">(</span><span class="n">user_id</span><span class="o">[</span><span class="n">i</span><span class="o">],</span><span class="n">banned_id</span><span class="o">[</span><span class="n">banIdx</span><span class="o">])){</span>
+                <span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span><span class="kc">true</span><span class="o">;</span>
+                <span class="n">dfs</span><span class="o">(</span><span class="n">user_id</span><span class="o">,</span><span class="n">banned_id</span><span class="o">,</span><span class="n">banIdx</span><span class="o">+</span><span class="mi">1</span><span class="o">);</span>
+                <span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span><span class="kc">false</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(){</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">8</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="n">used</span><span class="o">[</span><span class="n">i</span><span class="o">]=</span><span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">solution</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">user_id</span><span class="o">,</span> <span class="nc">String</span><span class="o">[]</span> <span class="n">banned_id</span><span class="o">)</span> <span class="o">{</span> 
+        <span class="n">init</span><span class="o">();</span>
+        <span class="n">dfs</span><span class="o">(</span><span class="n">user_id</span><span class="o">,</span><span class="n">banned_id</span><span class="o">,</span><span class="mi">0</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">set</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+:ET
