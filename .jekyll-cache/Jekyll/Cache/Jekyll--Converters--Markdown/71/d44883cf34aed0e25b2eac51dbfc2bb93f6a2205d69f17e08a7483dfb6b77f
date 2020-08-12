@@ -1,0 +1,101 @@
+I"�!<h2 id="builder-패턴이란">Builder 패턴이란</h2>
+
+<p><br /></p>
+
+<h2 id="사용이유">사용이유</h2>
+
+<ul>
+  <li>
+    <h3 id="빌더-패턴객체의-생성-알고리즘과-조립방법을-분리-하는것이-목적">빌더 패턴객체의 생성 알고리즘과 조립방법을 분리 하는것이 목적</h3>
+  </li>
+  <li>
+    <h3 id="코드읽기유지보수가-편해진다">코드읽기/유지보수가 편해진다.</h3>
+  </li>
+  <li>
+    <h3 id="생성자의-인수가-많을때-모든-종류의-생성자를-만들-수-없기-때문에-빌더-패턴을-이용한다">생성자의 인수가 많을때 모든 종류의 생성자를 만들 수 없기 때문에 빌더 패턴을 이용한다.</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="구현">구현</h2>
+
+<p><br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Order</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">address</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">price</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">stock</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">Order</span><span class="o">(){}</span>
+
+    <span class="kd">public</span> <span class="nf">Order</span><span class="o">(</span><span class="nc">OrderBuilder</span> <span class="n">orderBuilder</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">=</span><span class="n">orderBuilder</span><span class="o">.</span><span class="na">name</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">address</span><span class="o">=</span><span class="n">orderBuilder</span><span class="o">.</span><span class="na">address</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">price</span><span class="o">=</span><span class="n">orderBuilder</span><span class="o">.</span><span class="na">price</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">stock</span><span class="o">=</span><span class="n">orderBuilder</span><span class="o">.</span><span class="na">stock</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">OrderBuilder</span> <span class="nf">builder</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">OrderBuilder</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">OrderBuilder</span><span class="o">{</span>
+        <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="nc">String</span> <span class="n">address</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">price</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">stock</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nc">OrderBuilder</span> <span class="nf">name</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">){</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">name</span><span class="o">=</span><span class="n">name</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="nc">OrderBuilder</span> <span class="nf">address</span><span class="o">(</span><span class="nc">String</span> <span class="n">address</span><span class="o">){</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">address</span><span class="o">=</span><span class="n">address</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="nc">OrderBuilder</span> <span class="nf">price</span><span class="o">(</span><span class="kt">int</span> <span class="n">price</span><span class="o">){</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">price</span><span class="o">=</span><span class="n">price</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="nc">OrderBuilder</span> <span class="nf">stock</span><span class="o">(</span><span class="kt">int</span> <span class="n">stock</span><span class="o">){</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">stock</span><span class="o">=</span><span class="n">stock</span><span class="o">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kd">public</span> <span class="nc">Order</span> <span class="nf">build</span><span class="o">(){</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Order</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">toString</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="s">"주문제품명 : "</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s">" "</span> <span class="o">+</span>
+                <span class="s">"가격 : "</span><span class="o">+</span><span class="n">price</span><span class="o">+</span><span class="s">" "</span> <span class="o">+</span>
+                <span class="s">"주소 : "</span><span class="o">+</span><span class="n">address</span><span class="o">+</span><span class="s">" "</span><span class="o">+</span>
+                <span class="s">"수량 : "</span><span class="o">+</span><span class="n">stock</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="nc">Order</span> <span class="n">order</span><span class="o">=</span><span class="nc">Order</span><span class="o">.</span><span class="na">builder</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="s">"홍길동"</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">address</span><span class="o">(</span><span class="s">"서울"</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">price</span><span class="o">(</span><span class="mi">1000</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">stock</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+                <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">order</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="결과">결과</h2>
+<blockquote>
+  <p>주문제품명 : 홍길동 가격 : 1000 주소 : 서울 수량 : 10</p>
+</blockquote>
+:ET

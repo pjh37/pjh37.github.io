@@ -1,0 +1,35 @@
+I"0
+<h2 id="singleton-패턴이란">Singleton 패턴이란</h2>
+
+<p><br /></p>
+
+<h2 id="정의">정의</h2>
+<h3 id="생성자가-여러번-호출되도-실제로-생성되는-객체는-1개이고-최초-생성-이후에">생성자가 여러번 호출되도 실제로 생성되는 객체는 1개이고 최초 생성 이후에</h3>
+<h3 id="호출된-생성자는-최초의-생성자가-생성한-객체를-리턴한다-이러한-디자인-유형을">호출된 생성자는 최초의 생성자가 생성한 객체를 리턴한다. 이러한 디자인 유형을</h3>
+<h3 id="싱글턴-패턴이라고-한다-주로-공통된-객체를-여러개-생성해서-사용하는-dbcpdatabase-connection-pool">싱글턴 패턴이라고 한다. 주로 공통된 객체를 여러개 생성해서 사용하는 DBCP(Database Connection pool)</h3>
+<h3 id="과-같은-상황에서-많이-사용한다">과 같은 상황에서 많이 사용한다.</h3>
+
+<p><br /></p>
+
+<h2 id="구현">구현</h2>
+
+<p><br /></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Printer</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Printer</span> <span class="n">printer</span><span class="o">=</span><span class="kc">null</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="nf">Printer</span><span class="o">(){}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">Printer</span> <span class="nf">getInstence</span><span class="o">(){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">printer</span><span class="o">==</span><span class="kc">null</span><span class="o">){</span>
+            <span class="n">printer</span><span class="o">=</span><span class="k">new</span> <span class="nc">Printer</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">printer</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">print</span><span class="o">(</span><span class="nc">String</span> <span class="n">str</span><span class="o">){</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">str</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+:ET
