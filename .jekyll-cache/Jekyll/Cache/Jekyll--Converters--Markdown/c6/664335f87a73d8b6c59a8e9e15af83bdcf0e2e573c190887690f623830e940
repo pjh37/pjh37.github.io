@@ -1,0 +1,47 @@
+I"N<h1 id="dns">DNS</h1>
+
+<p><br /></p>
+
+<p><img src="https://user-images.githubusercontent.com/37110261/91178371-ff36b800-e71f-11ea-8904-500b6f42bd50.png" alt="dns그림" /></p>
+
+<p><br /></p>
+
+<h2 id="동작원리">동작원리</h2>
+<h3 id="dhcp-프로토콜로-ip-주소를-할당-받으면서-dns서버-ip주소를-받는다보통-2개를-받는다">DHCP 프로토콜로 IP 주소를 할당 받으면서 DNS서버 IP주소를 받는다.(보통 2개를 받는다,</h3>
+<h3 id="primary-dns서버가-죽었을때-secondary-dns서버에-물어볼려고">Primary DNS서버가 죽었을때 Secondary DNS서버에 물어볼려고)</h3>
+
+<p><br /></p>
+
+<blockquote>
+  <p>우리가 인터넷을 sk,kt등 ISP(인터넷 사업자)를 통해 신청하게 되면 우리의 컴퓨터에는
+DNS의 IP주소가 자동으로 셋팅 된다. 
+내가 만일 private하게 웹에 접속하고 싶을 경우 위와 같이 ISP업체가 제공해주는 DNS를
+사용하면 문제가 생길 수 있다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<blockquote>
+  <p>왜냐하면 내가 어떤 사이트에 접속할때 ISP업체의 DNS를 조회 하게 되고 그러면 ISP업체는 내가 어떤 사이트에 접속했는지 다 알 수 있다.
+이렇게 되면 ISP업체들이 자신들의 사업에 정보로 사용하거나 내가 접속한 사이트의 목록이
+유출 될 수 있다. 이를 방지하기 위해 다른 public DNS서버를 이용하는것이 좋다.
+ex) 1.1.1.1(개인의 IP주소 logging안함), 8.8.8.8(google이 제공)을 추천한다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="동작과정">동작과정</h2>
+
+<h3 id="1-wwwnavercom-을-입력한다local-dns에-wwwnavercom-에-대한-ip주소를-요청한다">1. www.naver.com 을 입력한다.Local DNS에 www.naver.com 에 대한 IP주소를 요청한다.</h3>
+<h3 id="2-local-dns에-해당-주소의-ip주소가-캐싱되어-있지-않다면-다른-dns-server에-요청하게-됩니다">2. Local DNS에 해당 주소의 IP주소가 캐싱되어 있지 않다면 다른 DNS Server에 요청하게 됩니다.</h3>
+<h3 id="3-먼저-root-dns서버에게-wwwnavercom-에-대한-ip주소를-물어-봅니다-이때-local-dns에는">3. 먼저 root DNS서버에게 www.naver.com 에 대한 IP주소를 물어 봅니다. 이때 Local DNS에는</h3>
+<h3 id="root-dns-서버의-ip주소가-미리-설정되-있어야-합니다">Root DNS 서버의 IP주소가 미리 설정되 있어야 합니다.</h3>
+<h3 id="4-root-dns-서버는-com-도메인을-관리하는-top-level-dns서버-ip주소를-local-dns에게-넘깁니다">4. Root DNS 서버는 “com 도메인”을 관리하는 top-level DNS서버 IP주소를 Local DNS에게 넘깁니다.</h3>
+<h3 id="5-local-dns서버는-다시-top-level-dns서버에게--wwwnavercom-에-대한-ip주소를-물어-봅니다">5. Local DNS서버는 다시 top-level DNS서버에게  www.naver.com 에 대한 IP주소를 물어 봅니다.</h3>
+<h3 id="6-top-level-dns서버는-다시-navercom-도메인을-관리하는-second-level-dns서버의-ip주소를">6. top-level DNS서버는 다시 “naver.com 도메인”을 관리하는 second-level-DNS서버의 IP주소를</h3>
+<h3 id="전송합니다">전송합니다.</h3>
+<h3 id="7-local-dns는-second-level-dns-서버에게-wwwnavercom-에-대한-ip주소를-물어-봅니다">7. Local DNS는 second-level-DNS 서버에게 www.naver.com 에 대한 IP주소를 물어 봅니다.</h3>
+<h3 id="8-second-level-dns서버는--wwwnavercom-에-대한-ip주소를-알고-있으므로-local-dns에게">8. second-level-DNS서버는  www.naver.com 에 대한 IP주소를 알고 있으므로 Local DNS에게</h3>
+<h3 id="ip주소를-반환합니다-이를-수신한-local-dns는-알게-된-ip주소를-캐싱하고-그-주소를-pc에게">IP주소를 반환합니다. 이를 수신한 Local DNS는 알게 된 IP주소를 캐싱하고 그 주소를 pc에게</h3>
+<h3 id="전달합니다">전달합니다.</h3>
+:ET
