@@ -1,0 +1,13 @@
+I"�<h2 id="docker란">Docker란?</h2>
+<p><img src="https://user-images.githubusercontent.com/37110261/91459854-1dd4b480-e8c2-11ea-86f5-9d61a41fc9b5.png" alt="docker" />
+<br /></p>
+<h3 id="docker란-go언어로-작성된-리눅스-컨테이너-기반으로하는-오픈소스-가상화-플랫폼이다">Docker란 Go언어로 작성된 리눅스 컨테이너 기반으로하는 오픈소스 가상화 플랫폼이다.</h3>
+
+<p><br /></p>
+
+<h2 id="빌드">빌드</h2>
+<h3 id="dockerfile이-있는-경로에서-build명령어를-사용한다">Dockerfile이 있는 경로에서 build명령어를 사용한다.</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="err">$</span><span class="p">{</span><span class="n">dockerhubId</span><span class="p">}</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">dockerhub</span> <span class="n">repository</span><span class="p">}</span><span class="o">:</span><span class="err">$</span><span class="p">{</span><span class="n">tagName</span><span class="p">}</span>
+</code></pre></div></div>
+:ET

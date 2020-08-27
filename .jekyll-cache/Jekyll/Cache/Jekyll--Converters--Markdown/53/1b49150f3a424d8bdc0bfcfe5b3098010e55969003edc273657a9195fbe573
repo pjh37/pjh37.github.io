@@ -1,0 +1,93 @@
+I"�<h2 id="docker란">Docker란?</h2>
+<p><img src="https://user-images.githubusercontent.com/37110261/91459854-1dd4b480-e8c2-11ea-86f5-9d61a41fc9b5.png" alt="docker" />
+<br /></p>
+<h3 id="docker란-go언어로-작성된-리눅스-컨테이너-기반으로하는-오픈소스-가상화-플랫폼이다">Docker란 Go언어로 작성된 리눅스 컨테이너 기반으로하는 오픈소스 가상화 플랫폼이다.</h3>
+
+<p><br /></p>
+
+<h2 id="빌드">빌드</h2>
+<h3 id="dockerfile이-있는-경로에서-build명령어를-사용한다">Dockerfile이 있는 경로에서 build명령어를 사용한다.</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="err">$</span><span class="p">{</span><span class="n">dockerhubId</span><span class="p">}</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">dockerhub</span> <span class="n">repository</span><span class="p">}</span><span class="o">:</span><span class="err">$</span><span class="p">{</span><span class="n">tagName</span><span class="p">}</span> <span class="p">.</span>
+</code></pre></div></div>
+<blockquote>
+  <p>-t : 저장소이름,태그이름 설정가능</p>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="이미지-목록-보기">이미지 목록 보기</h2>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docker</span> <span class="n">images</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p>##이미지 관련 명령어</p>
+
+<p><br /></p>
+
+<h2 id="이미지-검색">이미지 검색</h2>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docker</span> <span class="n">search</span> <span class="err">$</span><span class="p">{</span><span class="err">이미지</span> <span class="err">이름</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="이미지-받기">이미지 받기</h2>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docker</span> <span class="n">pull</span> <span class="err">$</span><span class="p">{</span><span class="err">이미지</span> <span class="err">이름</span><span class="p">}</span><span class="o">:</span><span class="err">$</span><span class="p">{</span><span class="err">태그이름</span><span class="n">or</span><span class="err">버전</span><span class="p">}</span>
+
+<span class="n">ex</span><span class="p">)</span> <span class="n">docker</span> <span class="n">pull</span> <span class="n">redis</span><span class="o">:</span><span class="n">latest</span>
+</code></pre></div></div>
+<blockquote>
+  <p>보통 태그에 latest를 쓰면 최신버전이다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="이미지-삭제">이미지 삭제</h2>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docker</span> <span class="n">rmi</span> <span class="err">$</span><span class="p">{</span><span class="err">이미지</span> <span class="n">id</span><span class="p">}</span>
+</code></pre></div></div>
+<h3 id="컨테이너를-삭제하기전에-이미지를-삭제-할때--f옵션을-붙이면-강제-삭제가-가능하다">컨테이너를 삭제하기전에 이미지를 삭제 할때 -f옵션을 붙이면 강제 삭제가 가능하다.</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docker</span> <span class="n">rmi</span> <span class="o">-</span><span class="n">f</span> <span class="err">$</span><span class="p">{</span><span class="err">이미지</span> <span class="n">id</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="컨테이너-관련-명령어">컨테이너 관련 명령어</h2>
+
+<p><br /></p>
+
+<h2 id="실행중인-컨테이너-목록">실행중인 컨테이너 목록</h2>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docker</span> <span class="n">ps</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="모든-컨테이너-목록">모든 컨테이너 목록</h2>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docker</span> <span class="n">ps</span> <span class="o">-</span><span class="n">a</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="컨테이너-실행">컨테이너 실행</h2>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">p</span>
+</code></pre></div></div>
+
+<h3 id="실행-옵션">실행 옵션</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">옵션</th>
+      <th style="text-align: center">설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">-d</td>
+      <td style="text-align: center">백그라운드에서 컨테이너가 실행된다</td>
+    </tr>
+  </tbody>
+</table>
+
+:ET
