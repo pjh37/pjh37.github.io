@@ -1,0 +1,131 @@
+I"�%<h1 id="session과-cookie의-차이와-동작원리">Session과 Cookie의 차이와 동작원리</h1>
+
+<p><br /></p>
+
+<h2 id="쿠키cookie">쿠키(Cookie)</h2>
+<ul>
+  <li>
+    <h3 id="쿠키는-서버가-사용자의-웹-브라우저-저장하는-데이터이다">쿠키는 서버가 사용자의 웹 브라우저 저장하는 데이터이다.</h3>
+  </li>
+  <li>
+    <h3 id="쿠키는-key-value형태로-string으로-이루어져-있다">쿠키는 key-value형태로 String으로 이루어져 있다.</h3>
+  </li>
+  <li>
+    <h3 id="4kb이상-저장할-수-없다">4KB이상 저장할 수 없다.</h3>
+  </li>
+</ul>
+
+<blockquote>
+  <p>브라우저 마다 저장되는 쿠키가 다르다. 서버에서는 브라우저가 다르면 다른 사용자로 인식한다.</p>
+</blockquote>
+
+<h2 id="쿠키-동작-순서">쿠키 동작 순서</h2>
+<ol>
+  <li>
+    <h3 id="클라이언트가-서버에-요청을-하면-서버가-응답할-때-쿠키에-저장하고자-하는-정보를-set-cookie를-통해">클라이언트가 서버에 요청을 하면 서버가 응답할 때 쿠키에 저장하고자 하는 정보를 set-Cookie를 통해</h3>
+    <h3 id="해더에-담아-함께-전달한다">해더에 담아 함께 전달한다.</h3>
+    <blockquote>
+      <p>Set-Cookie:<cookie-name><cookie-value>
+<br /></cookie-value></cookie-name></p>
+    </blockquote>
+  </li>
+  <li>
+    <h3 id="클라이언트는-서버로-전송하는-모든-요청에-현재-브라우저에-저장된-모든-쿠키를-header의-cookie로-전달한다">클라이언트는 서버로 전송하는 모든 요청에 현재 브라우저에 저장된 모든 쿠키를 Header의 cookie로 전달한다.</h3>
+    <blockquote>
+      <p>Cookie: <cookie-name><cookie-value></cookie-value></cookie-name></p>
+    </blockquote>
+  </li>
+</ol>
+
+<p><br /></p>
+
+<h3 id="서버가-쿠키와-함께-아래와-같은-응답을-클라이언트에게-전달했다면">서버가 쿠키와 함께 아래와 같은 응답을 클라이언트에게 전달했다면</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">HTTP</span><span class="o">/</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span> <span class="mi">200</span> <span class="n">OK</span>
+<span class="n">Content</span><span class="o">-</span><span class="n">type</span><span class="o">:</span> <span class="n">text</span><span class="o">/</span><span class="n">html</span>
+<span class="n">Set</span><span class="o">-</span><span class="n">Cookie</span><span class="o">:</span> <span class="n">yummy_cookie</span><span class="o">=</span><span class="n">choco</span>
+<span class="n">Set</span><span class="o">-</span><span class="n">Cookie</span><span class="o">:</span> <span class="n">tasty_cookie</span><span class="o">=</span><span class="n">strawberry</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="이후에는-해당-클라이언트는-매번-저장된-쿠키를-헤더에-포함시켜-요청을-보내게-된다">이후에는 해당 클라이언트는 매번 저장된 쿠키를 헤더에 포함시켜 요청을 보내게 된다.</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">GET</span> <span class="o">/</span><span class="n">sample_page</span><span class="p">.</span><span class="n">html</span> <span class="n">HTTP</span><span class="o">/</span><span class="mi">1</span><span class="p">.</span><span class="mi">1</span>
+<span class="n">Host</span><span class="o">:</span> <span class="n">www</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">org</span>
+<span class="n">Cookie</span><span class="o">:</span> <span class="n">yummy_cookie</span><span class="o">=</span><span class="n">choco</span><span class="p">;</span> <span class="n">tasty_cookie</span><span class="o">=</span><span class="n">strawberry</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="session-쿠키--permanent쿠기">Session 쿠키 , Permanent쿠기</h2>
+<h3 id="session-cookie">Session cookie</h3>
+<ul>
+  <li>
+    <h3 id="만료날짜시간을-정하게-되면-세션-쿠키에-저장된다">만료날짜/시간을 정하게 되면 세션 쿠키에 저장된다.</h3>
+  </li>
+  <li>
+    <h3 id="세션-쿠키는-브라우저-메모리에-저장되므로-브라우저가-종료되면-쿠키는-사라진다">세션 쿠키는 브라우저 메모리에 저장되므로 브라우저가 종료되면 쿠키는 사라진다.</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="permanent-cookie">Permanent Cookie</h3>
+<ul>
+  <li>
+    <h3 id="만료날짜시간을-정하지-않으면-permanent쿠기에-저장된다">만료날짜/시간을 정하지 않으면 Permanent쿠기에 저장된다</h3>
+  </li>
+  <li>
+    <h3 id="permanent쿠기는-파일로-저장되므로-브라우저가-종료되더라도-쿠키는-남아있게-된다">Permanent쿠기는 파일로 저장되므로 브라우저가 종료되더라도 쿠키는 남아있게 된다.</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="session">Session</h2>
+
+<p><br /></p>
+
+<h3 id="서버에-클라이언트의-상태정보를-저장하는-기술로-논리적인-연결을-하며">서버에 클라이언트의 상태정보를 저장하는 기술로 논리적인 연결을 하며</h3>
+<h3 id="웹-서버에-client에-대한-정보를-저장하고-client에게는-client를-구분할-수-있는-id를-부여하는데">웹 서버에 client에 대한 정보를 저장하고 client에게는 client를 구분할 수 있는 ID를 부여하는데</h3>
+<h3 id="이것을-세션이라-한다">이것을 세션이라 한다.</h3>
+
+<p><br /></p>
+
+<h2 id="세션-동작-순서">세션 동작 순서</h2>
+
+<p><br /></p>
+
+<h3 id="1-클라이언트가-서버에-처음으로-request를-보냄-첫-요청이기-때문에-session-id가-존재하지-않음">1. 클라이언트가 서버에 처음으로 Request를 보냄 (첫 요청이기 때문에 session id가 존재하지 않음)</h3>
+<h3 id="2-서버에서는-session-id-쿠키-값이-없는-것을-확인하고-새로-발급해서-응답">2. 서버에서는 session id 쿠키 값이 없는 것을 확인하고 새로 발급해서 응답</h3>
+<h3 id="3-이후-클라이언트는-전달받은-session-id-값을-매-요청마다-헤더-쿠키에-넣어서-요청">3. 이후 클라이언트는 전달받은 session id 값을 매 요청마다 헤더 쿠키에 넣어서 요청</h3>
+<h3 id="4-서버는-session-id를-확인하여-사용자를-식별">4. 서버는 session id를 확인하여 사용자를 식별</h3>
+<h3 id="5-클라이언트가-로그인을-요청하면-서버는-session을-로그인한-사용자-정보로-갱신하고-새로운-session-id를-발급하여-응답">5. 클라이언트가 로그인을 요청하면 서버는 session을 로그인한 사용자 정보로 갱신하고 새로운 session id를 발급하여 응답</h3>
+<h3 id="6-이후-클라이언트는-로그인-사용자의-session-id-쿠키를-요청과-함께-전달하고-서버에서도-로그인된-사용자로-식별-가능">6. 이후 클라이언트는 로그인 사용자의 session id 쿠키를 요청과 함께 전달하고 서버에서도 로그인된 사용자로 식별 가능</h3>
+<h3 id="7-클라이언트-종료-브라우저-종료-시-session-id-제거-서버에서도-세션-제거">7. 클라이언트 종료 (브라우저 종료) 시 session id 제거, 서버에서도 세션 제거</h3>
+
+<p><br /></p>
+
+<h2 id="면접-질문-예시">면접 질문 예시</h2>
+<h3 id="질문1">질문1)</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span> <span class="n">user</span><span class="o">=</span><span class="n">httpSession</span><span class="o">.</span><span class="na">getAttribute</span><span class="o">(</span><span class="s">"user"</span><span class="o">);</span>
+</code></pre></div></div>
+<blockquote>
+  <p>user라는 key값으로 가져오는 “user”는 사용자 A가 접속해도 “user”로 값을 가져오고 사용자 B가 접속해도
+“user”로 가져오는데 어떻게 A와 B가 접속했을때 서로 다른 결과값을 받을 수 있는가?</p>
+</blockquote>
+
+<p><br /></p>
+
+<h3 id="답변1">답변1)</h3>
+<h3 id="클라이언트가-처음으로-웹-어플리케이션을-방문하거나-requestgetsession을-통해-httpsession을">클라이언트가 처음으로 웹 어플리케이션을 방문하거나 request.getSession()을 통해 HttpSession을</h3>
+<h3 id="처음으로-가져오면-서블릿-컨테이너는-새로운-httpsession객체를-생성하고-unique한-id를-생성-후">처음으로 가져오면 서블릿 컨테이너는 새로운 HttpSession객체를 생성하고 unique한 ID를 생성 후,</h3>
+<h3 id="서버의-메모리에-저장한다-또한-서블릿-컨테이너는-jsessionid란-이름을-key로-생성한-session-id를">서버의 메모리에 저장한다. 또한 서블릿 컨테이너는 JSESSIONID란 이름을 key로, 생성한 session ID를</h3>
+<h3 id="value로-하여-http응답의-set-cookie-header에-cookie로-설정한다">value로 하여 HTTP응답의 Set-Cookie header에 cookie로 설정한다.</h3>
+
+<p><br /></p>
+
+<h3 id="웹-브라우저와-웹-서버가-준수해야-할-http-cookie-스펙에-따라-클라이언트는-cookie가-유효한-동안은">웹 브라우저와 웹 서버가 준수해야 할 HTTP Cookie 스펙에 따라 클라이언트는 cookie가 유효한 동안은</h3>
+<h3 id="cookie-header의-후속-request에-cookie를-반환해야한다">cookie header의 후속 request에 cookie를 반환해야한다.</h3>
+:ET

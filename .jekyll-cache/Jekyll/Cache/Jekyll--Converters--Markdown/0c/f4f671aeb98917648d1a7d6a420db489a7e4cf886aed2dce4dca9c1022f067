@@ -1,0 +1,158 @@
+I"�9<h1 id="callback을-통해-비동기를-구현해보자">Callback을 통해 비동기를 구현해보자</h1>
+
+<p><br /></p>
+
+<h2 id="callback">Callback</h2>
+<h3 id="피호출자caller가-호출자callee를-다시-호출하는-것">피호출자(Caller)가 호출자(Callee)를 다시 호출하는 것</h3>
+<h3 id="비동기asynchronous적-처리를-하기-위한-디자인-패턴의-종류">비동기(Asynchronous)적 처리를 하기 위한 디자인 패턴의 종류</h3>
+
+<p><br /></p>
+
+<h2 id="callback패턴을-이용한-비동기-방식">Callback패턴을 이용한 비동기 방식</h2>
+<h3 id="ab클래스가-있을때-a는-b를-실행시키기만-하고-a는-자신의-작업을-지속한다">A,B클래스가 있을때 A는 B를 실행시키기만 하고 A는 자신의 작업을 지속한다.</h3>
+<h3 id="b는-작업이-완료되면-a에게-알려준다">B는 작업이 완료되면 A에게 알려준다.</h3>
+<h3 id="a가-호출한-b가-필요시-다시-a의-메소드를-호출하기-때문에-callback이라-부른다">A가 호출한 B가 필요시 다시 A의 메소드를 호출하기 때문에 Callback이라 부른다.</h3>
+
+<p><br /></p>
+
+<blockquote>
+  <p>비동기를 통해 실행되는 곳은 새로운 Thread를 이용해 작동시켜야 한다.
+그렇지 않으면 Main Thread가 blocking되어 비동기를 구현하는 의미가 없어진다.</p>
+</blockquote>
+
+<h2 id="예시">예시</h2>
+
+<p><br /></p>
+
+<h3 id="콜백-으로-사용할-메소드-인터페이스로-선언">콜백 으로 사용할 메소드 인터페이스로 선언</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Loader</span> <span class="o">{</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onProgressUpdate</span><span class="o">(</span><span class="nc">String</span> <span class="n">progress</span><span class="o">);</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onComplete</span><span class="o">(</span><span class="nc">String</span> <span class="n">url</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="caller">caller</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FileLoader</span> <span class="kd">implements</span> <span class="nc">Loader</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onProgressUpdate</span><span class="o">(</span><span class="nc">String</span> <span class="n">progress</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">progress</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onComplete</span><span class="o">(</span><span class="nc">String</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">url</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="callee--version1-main-thread가-blocking-되는-방식">callee  version1 (main thread가 blocking 되는 방식)</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">VideoDownLoader</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Loader</span> <span class="n">fileLoader</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">VideoDownLoader</span><span class="o">(</span><span class="nc">Loader</span> <span class="n">fileLoader</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">fileLoader</span><span class="o">=</span><span class="n">fileLoader</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">(){</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"다운로드 시작"</span><span class="o">);</span>
+        <span class="k">try</span><span class="o">{</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="mi">10</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+                <span class="n">fileLoader</span><span class="o">.</span><span class="na">onProgressUpdate</span><span class="o">(</span><span class="s">"진행중... "</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="mi">10</span><span class="o">+</span><span class="s">"%"</span><span class="o">);</span>
+                <span class="nc">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">fileLoader</span><span class="o">.</span><span class="na">onComplete</span><span class="o">(</span><span class="s">"다운로드 완료!"</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">){}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="callee-version2-non-blocking-방식으로-구동되는-방식">callee version2 (non-blocking 방식으로 구동되는 방식)</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">VideoDownLoader</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Loader</span> <span class="n">fileLoader</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">VideoDownLoader</span><span class="o">(</span><span class="nc">Loader</span> <span class="n">fileLoader</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">fileLoader</span><span class="o">=</span><span class="n">fileLoader</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">execute</span><span class="o">(){</span>
+         <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()-&gt;{</span>
+            <span class="k">try</span><span class="o">{</span>
+                <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="mi">10</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+                    <span class="n">fileLoader</span><span class="o">.</span><span class="na">onProgressUpdate</span><span class="o">(</span><span class="s">"진행중... "</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="mi">10</span><span class="o">+</span><span class="s">"%"</span><span class="o">);</span>
+                    <span class="nc">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+                <span class="o">}</span>
+                <span class="n">fileLoader</span><span class="o">.</span><span class="na">onComplete</span><span class="o">(</span><span class="s">"다운로드 완료!"</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">){}</span>
+        <span class="o">}).</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="main">main</h2>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="nc">VideoDownLoader</span> <span class="n">videoDownLoader</span><span class="o">=</span><span class="k">new</span> <span class="nc">VideoDownLoader</span><span class="o">(</span><span class="k">new</span> <span class="nc">FileLoader</span><span class="o">());</span>
+        <span class="n">videoDownLoader</span><span class="o">.</span><span class="na">execute</span><span class="o">();</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"============================="</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"============================="</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h3 id="version1-asynchronous--blocking-실행결과">version1 Asynchronous + blocking 실행결과</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">다운로드</span> <span class="n">시작</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">10</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">20</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">30</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">40</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">50</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">60</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">70</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">80</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">90</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">100</span><span class="o">%</span>
+<span class="n">다운로드</span> <span class="n">완료</span><span class="o">!</span>
+<span class="o">=============================</span>
+<span class="n">main</span>
+<span class="o">=============================</span>
+
+</code></pre></div></div>
+<h3 id="다운로드가-완료-되고-나서야-main-thread가-진행되는-것으로-추측할-수-있듯이">다운로드가 완료 되고 나서야 Main Thread가 진행되는 것으로 추측할 수 있듯이</h3>
+<h3 id="videodownloaderexecute-호출후-main-thread가-blocking걸리는-것을-볼-수-있다">videoDownLoader.execute(); 호출후 Main Thread가 blocking걸리는 것을 볼 수 있다.</h3>
+
+<p><br /></p>
+
+<h3 id="version2-asynchronous--non-blocking-실행결과">version2 Asynchronous + non-blocking 실행결과</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">다운로드</span> <span class="n">시작</span>
+<span class="o">=============================</span>
+<span class="n">main</span>
+<span class="o">=============================</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">10</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">20</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">30</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">40</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">50</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">60</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">70</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">80</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">90</span><span class="o">%</span>
+<span class="n">진행중</span><span class="o">...</span> <span class="mi">100</span><span class="o">%</span>
+<span class="n">다운로드</span> <span class="n">완료</span><span class="o">!</span>
+
+</code></pre></div></div>
+<h3 id="다운로드의-진행과-main-thread가-각기-따로-실행되는-것을-알-수-있따">다운로드의 진행과 Main Thread가 각기 따로 실행되는 것을 알 수 있따.</h3>
+:ET

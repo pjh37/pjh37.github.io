@@ -1,0 +1,30 @@
+I"�<h1 id="모듈러-연산">모듈러 연산</h1>
+
+<p><br /></p>
+
+<h3 id="길이가-n인-배열에서-현재-홍길동은-i번째에-위치해-있다고-생각해보자">길이가 N인 배열에서 현재 홍길동은 i번째에 위치해 있다고 생각해보자</h3>
+<h3 id="왼쪽이동은-음수-오른쪽이동은-양수라고-했을때-원형으로-이루어져-있다고-생각해보면">왼쪽이동은 음수, 오른쪽이동은 양수라고 했을때 원형으로 이루어져 있다고 생각해보면</h3>
+<h3 id="1의-왼쪽은-n-n의-오른쪽에는-1이-위치해있다">1의 왼쪽은 N, N의 오른쪽에는 1이 위치해있다.</h3>
+
+<p><br /></p>
+
+<h3 id="오른쪽으로-x칸-이동한경우-홍길동의-다음-위치는-어디인가">오른쪽으로 x칸 이동한경우 홍길동의 다음 위치는 어디인가?</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">next</span><span class="o">=(</span><span class="n">i</span><span class="o">+</span><span class="n">x</span><span class="o">)%</span><span class="no">N</span><span class="o">;</span>
+<span class="c1">// next값은 바로 i위치에서 x만큼 오른쪽으로 이동했을때 위치이다.</span>
+</code></pre></div></div>
+<blockquote>
+  <p>(현재위치+이동칸수)%배열길이</p>
+</blockquote>
+
+<p><br /></p>
+
+<h3 id="왼쪽으로-x칸-이동한-경우-홍길동의-다음-위치는-어디인가-방향-이동이므로-주의-해야한다">왼쪽으로 x칸 이동한 경우 홍길동의 다음 위치는 어디인가?(-방향 이동이므로 주의 해야한다.)</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">next</span><span class="o">=(</span><span class="n">i</span><span class="o">+</span><span class="n">x</span><span class="o">)%</span><span class="no">N</span><span class="o">+</span><span class="no">N</span><span class="o">;</span>
+<span class="c1">// next값은 바로 i위치에서 x만큼 왼쪽으로 이동했을때 위치이다.</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>(현재위치+이동칸수)%배열길이+배열길이</p>
+</blockquote>
+
+:ET
