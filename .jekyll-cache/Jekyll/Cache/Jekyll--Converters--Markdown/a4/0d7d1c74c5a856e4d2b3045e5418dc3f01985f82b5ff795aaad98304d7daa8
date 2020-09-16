@@ -1,4 +1,4 @@
-I"'<h1 id="tcp-3-way-handshake">TCP 3-way-handshake</h1>
+I"�<h1 id="tcp-3-way-handshake">TCP 3-way-handshake</h1>
 
 <p><br /></p>
 
@@ -70,5 +70,49 @@ ACK: acknowledgment</p>
 Client에서 세션을 종료시킨 뒤에 뒤늦게 도착하는 패킷이 있다면 이 패킷은 drop되고 데이터는 유실 될 것이다
 이러한 일에 대비하여 Client는 Server로부터 FIN을 수신하더라도 일정시간(default 240초)동안 세션을 
 남겨놓고 남은 패킷이 도착하기를 기다리는데 이 과정을 TIME_WAIT라고 한다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="tcp-flags-종류-정리">TCP flags 종류 정리</h2>
+<h3 id="syn--연결-요청-플래그">SYN -연결 요청 플래그</h3>
+<blockquote>
+  <p>통신 시작 시 세션을 연결하기 위한 플래그</p>
+</blockquote>
+
+<p><br /></p>
+
+<h3 id="ack--응답-플래그">ACK -응답 플래그</h3>
+<blockquote>
+  <p>송신 측으로부터 패킷을 잘 받았다는 것을 알려주기 위한 플래그</p>
+</blockquote>
+
+<p><br /></p>
+
+<h3 id="fin---연결-종료-플래그">FIN - 연결 종료 플래그</h3>
+<blockquote>
+  <p>더 이상 전송할 데이터가 없고 세션 연결을 종료시키겠다는 플래그</p>
+</blockquote>
+
+<p><br /></p>
+
+<h3 id="rstreset---연결-재설정-플래그">RST(reset) - 연결 재설정 플래그</h3>
+<blockquote>
+  <p>비정상적인 세션을 끊기위해 연결을 재설정 하는 과정</p>
+</blockquote>
+
+<p><br /></p>
+
+<h3 id="pshpush---넣기">PSH(push) - 넣기</h3>
+<blockquote>
+  <p>버퍼가 채워지기를 기다리지 않고 받는 즉시 전달한다.
+버퍼링 없이 7Layer의 응용프로그램에게 바로 전달하는 플래그</p>
+</blockquote>
+
+<p><br /></p>
+
+<h3 id="urgurgent---긴급-데이터-플래그">URG(urgent) - 긴급 데이터 플래그</h3>
+<blockquote>
+  <p>긴급한 데이터의 우선순위를 다른 데이터의 우선순위보다 높혀 긴급하게 전달하는 플래그</p>
 </blockquote>
 :ET

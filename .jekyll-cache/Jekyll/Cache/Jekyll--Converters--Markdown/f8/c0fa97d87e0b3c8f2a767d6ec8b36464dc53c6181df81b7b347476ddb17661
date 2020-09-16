@@ -1,0 +1,99 @@
+I"><h1 id="spring-mvc">spring MVC</h1>
+
+<p><br /></p>
+
+<h2 id="mvc를-설명하기전-dispatcherservlet의-개념부터-보자">MVC를 설명하기전 DispatcherServlet의 개념부터 보자</h2>
+
+<p><img src="https://user-images.githubusercontent.com/37110261/92370336-1a002800-f135-11ea-88e3-18a138749fd4.png" alt="dispatherservlet" /></p>
+
+<p><br /></p>
+
+<ul>
+  <li>
+    <h3 id="dispatcherservlet">DispatcherServlet</h3>
+    <ul>
+      <li>
+        <h3 id="spring-framework가-제공하는-servlet클래스">Spring Framework가 제공하는 Servlet클래스</h3>
+      </li>
+      <li>
+        <h3 id="사용자의-요청을-받는다">사용자의 요청을 받는다.</h3>
+      </li>
+      <li>
+        <h3 id="dispatcherservlet가-받은-요청을-handlermapping으로-넘긴다">DispatcherServlet가 받은 요청을 HandlerMapping으로 넘긴다.</h3>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h3 id="handlermapping">HandlerMapping</h3>
+    <ul>
+      <li>
+        <h3 id="사용자의-요청을-처리할-controller를-찾는다">사용자의 요청을 처리할 Controller를 찾는다.</h3>
+      </li>
+      <li>
+        <h3 id="요청-url에-해당하는-controller정보를-저장하는-table을-가진다">요청 url에 해당하는 Controller정보를 저장하는 table을 가진다.</h3>
+      </li>
+      <li>
+        <h3 id="클래스에-requestmappingurl-을-명시하면-해당-url에-대한-요청이-왔을때">클래스에 @RequestMapping(“/url”) 을 명시하면 해당 url에 대한 요청이 왔을때</h3>
+        <p>### table에 저장된 정보에 따라 해당 클래스또는 메서드에 Mapping한다.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h3 id="viewresolver">ViewResolver</h3>
+    <ul>
+      <li>
+        <h3 id="controller가-반환한-view-name에-prefixsuffix를-적용하여-view-object를-반환한다">Controller가 반환한 View name에 prefix,suffix를 적용하여 View Object를 반환한다.</h3>
+      </li>
+      <li>
+        <h3 id="즉-view이름으로부터-사용될-view객체를-매핑하는-역할을-하는것이다">즉, view이름으로부터 사용될 view객체를 매핑하는 역할을 하는것이다.</h3>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="1-클라이언트가-해당-어플리케이션에-접근하면-접근한-url요청을-dispatcherservlet이-가로챈다">1. 클라이언트가 해당 어플리케이션에 접근하면 접근한 URL요청을 DispatcherServlet이 가로챈다.</h3>
+
+<p><br /></p>
+
+<h3 id="2-가로챈-정보를-handlermapping에게-보내-해당-요청을-처리할-수-있는-controller를-찾는다">2. 가로챈 정보를 HandlerMapping에게 보내 해당 요청을 처리할 수 있는 controller를 찾는다.</h3>
+
+<p><br /></p>
+
+<h3 id="3-handlermapping-해당-요청을-처리할-controller를-찾아냈다면-요청을-controller에-보낸다">3. HandlerMapping 해당 요청을 처리할 controller를 찾아냈다면 요청을 controller에 보낸다.</h3>
+
+<p><br /></p>
+
+<h3 id="4-해당-요청을-처리한-후-controller는-요청을-응답받을-view의-이름을-리턴하게-된다">4. 해당 요청을 처리한 후 controller는 요청을 응답받을 View의 이름을 리턴하게 된다.</h3>
+<h3 id="이때-이-이름을-viewresolver가-먼저-받아-해당하는-view가-존재하는지-검색한다">이때 이 이름을 ViewResolver가 먼저 받아 해당하는 View가 존재하는지 검색한다.</h3>
+
+<p><br /></p>
+
+<h3 id="5-viewresolver가-검색결과를-dispatcherservlet에-전달한다">5. ViewResolver가 검색결과를 DispatcherServlet에 전달한다.</h3>
+<h3 id="6-dispatcherservlet은-응답할-view에게-render를-지시하고-view는-응답로직처리를-한다">6. DispatcherServlet은 응답할 View에게 Render를 지시하고 View는 응답로직처리를 한다.</h3>
+<h3 id="6-dispatcherservlet은-클라이언트에게-렌더링된-view를-응답한다">6. DispatcherServlet은 클라이언트에게 렌더링된 View를 응답한다.</h3>
+
+<p><br /></p>
+
+<ul>
+  <li>
+    <h3 id="model">Model</h3>
+    <ul>
+      <li>
+        <h3 id="애플리케이션의-상태data를-나타낸다">애플리케이션의 상태(data)를 나타낸다.</h3>
+      </li>
+      <li>
+        <h3 id="java-beans">Java Beans</h3>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h3 id="view">View</h3>
+    <ul>
+      <li>###</li>
+    </ul>
+  </li>
+</ul>
+
+:ET
