@@ -30,10 +30,10 @@ private:
     int heap_size;
 public:
     Heap() :heap_size(0) {
-		memset(heap, 0, sizeof(heap));
+        memset(heap, 0, sizeof(heap));
     }
 
-	void push(int data) {
+    void push(int data) {
         int target = heap_size+1;
         while (target != 1 && heap[target / 2] < data) {
             heap[target] = heap[target / 2];
@@ -49,7 +49,7 @@ public:
         while (true) {
             if (child + 1 < heap_size&&heap[child] < heap[child + 1]) {
                 child++;
-			}
+            }
             if (temp >= heap[child])break;
             heap[parent] = heap[child];
             parent = child;
@@ -57,11 +57,11 @@ public:
         }
         heap[parent] = temp;
         heap_size--;
-	}
+    }
 
     int top() {
         return heap[1];
-	}
+    }
     bool isEmpty() {
         return heap_size == 0;
     }
