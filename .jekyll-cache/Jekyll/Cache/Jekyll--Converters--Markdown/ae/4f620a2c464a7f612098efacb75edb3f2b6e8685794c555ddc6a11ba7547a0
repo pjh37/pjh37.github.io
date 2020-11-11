@@ -1,0 +1,358 @@
+I"�+<h1 id="innodb의-잠금-방식">InnoDB의 잠금 방식</h1>
+
+<h3 id="참고">참고</h3>
+<h3 id="pessimistic-locking비관적-잠금">Pessimistic locking(비관적 잠금)</h3>
+<blockquote>
+  <p>현재 트랜잭션에서 변경하고자 하는 레코드에 대해 잠금을 획득하고 변경 작업을 처리하는 방식, 현재 변경하고자 하는 레코드를 다른 트랜잭션에서도 변경할수 있다라는 비관적인 가정을 하기 때문에 먼저 잠금을 획득한 것이다. 일반적으로 높은 동시성 처리에는 비관적 잠금이 유리하다고 알려져 있으며 InnoDB는 비관적 잠금방식을 채택하고 있다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h3 id="optimistic-locking낙관적-잠금">Optimistic locking(낙관적 잠금)</h3>
+<blockquote>
+  <p>기본적으로 각 트랜잭션이 같은 레코드를 변경할 가능성이 희박할 것이라고 가정한다. 그래서 우선 변경 작업을 수행하고 마지막에 잠금 충돌이 있었는지 확인해 문제가 있었다면 ROLLBACK처리하는 방식을 말한다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h2 id="innodb의-잠금-종류">InnoDB의 잠금 종류</h2>
+
+<blockquote>
+  <p>InnoDB 스토리지 엔진은 레코드 기반의 잠금 기능을 제공하며, 잠금 정보가 상당히 작은 공간으로 관리 되기 때문에 레코드 락이 페이지 락으로 또는 테이블 락으로 레벨업되는 경우는 없다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h1 id="mysql의-격리수준">MySQL의 격리수준</h1>
+
+<p><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>DIRTY READ</th>
+      <th>NON-REPEATABLE READ</th>
+      <th>PHANTOM READ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>READ UNCOMMITTED</td>
+      <td>발생</td>
+      <td>발생</td>
+      <td>발생</td>
+    </tr>
+    <tr>
+      <td>READ COMMITTED</td>
+      <td>발생하지 않음</td>
+      <td>발생</td>
+      <td>발생</td>
+    </tr>
+    <tr>
+      <td>REPEATABLE READ</td>
+      <td>발생하지 않음</td>
+      <td>발생하지 않음</td>
+      <td>발생(Inno_db는 발생x)</td>
+    </tr>
+    <tr>
+      <td>SERIALIZABLE</td>
+      <td>발생하지 않음</td>
+      <td>발생하지 않음</td>
+      <td>발생하지 않음</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<h1 id="read-uncommitted">READ UNCOMMITTED</h1>
+
+<p><br /></p>
+
+<blockquote>
+  <p>READ UNCOMMITTED 격리 수준에서는 각 트랜잭션에서의 변경 내용이 COMMIT이나 ROLLEBACK여부에 상관 없이 다른 트랜잭션에서 보여진다.</p>
+</blockquote>
+
+<p><img width="600" height="700" alt="read_uncommitted" src="https://user-images.githubusercontent.com/37110261/98778391-9cf37680-2435-11eb-8409-7b01169b6bae.png" /></p>
+
+<blockquote>
+  <p>어떤 트랜잭션에서 처리한 작업이 완료되지 않았는데도 다른 트랜잭션에서 볼 수 있게 되는 현상을 더티 리드(Dirty read)라 하고, 더티 리드가 허용되는 격리 수준이 READ UNCOMMITTED다. 더티 리드 현상은 데이터가 나타났다가 사라졌다 하는 현상을 초래하므로 애플리케이션 개발자와 사용자를 상당히 혼란스럽게 만든다. 또한 더티 리드를 유발하는 READ UNCOMMITTED는 RDBMS 표준에서는 트랜잭션의 격리 수준으로 인정하지 않을 정도로 정합성에 문제가 많은 격리 수준이다. MySQL을 사용한다면 최소한 READ COMMITTED 이상의 격리 수준이 권장된다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h1 id="read-committed">READ COMMITTED</h1>
+<blockquote>
+  <p>READ COMMITTED는 오라클 DBMS에서 기본적으로 사용되는 격리 수준이며, 온라인 서비스에서 가장 많이 선택되는 격리 수준이다. READ COMMITTED에서는 더티 리드와 같은 현상은 발생하지 않는다. 어떤 트랜잭션에서 데이터를 변경했더라도 COMMIT이 완료된 데이터만 다른 트랜잭션에서 조회할 수 있기 때문이다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>emp_no</th>
+      <th>first_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>499</td>
+      <td>홍길동</td>
+    </tr>
+    <tr>
+      <td>500</td>
+      <td>둘리</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>사용자A</th>
+      <th>테이블</th>
+      <th>사용자B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>BEGIN</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>update set fist_name=’마이클’ where emp_no=500</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>emp_no=500인 곳의 first_name이 둘리 -&gt; 마이클로 변경</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>undo영역에 변경 전 데이터 백업, emp_no=500 first_name=’둘리’</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>select * where emp_no=500</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>결과 1건 first_name=’둘리’</td>
+    </tr>
+    <tr>
+      <td>COMMIT</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>select * where emp_no=500</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>결과 1건 first_name=’마이클’</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<blockquote>
+  <p>실제 테이블 값이 아닌 undo영역에 백업된 레코드에서 가져온다. READ COMMITTED격리 수준에서는 어떤 트랜잭션에서 변경한 내용이 커밋되기 전까지는 다른 트랜잭션에서 그러한 변경 내역을 조회할 수 없기 때문이다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h3 id="read-committed-격리-수준에서도-non-repeatable-read-라는-부정합-문제가-있다">READ COMMITTED 격리 수준에서도 NON-REPEATABLE READ 라는 부정합 문제가 있다.</h3>
+
+<h3 id="employees">employees</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>emp_no</th>
+      <th>first_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>499</td>
+      <td>홍길동</td>
+    </tr>
+    <tr>
+      <td>500</td>
+      <td>둘리</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>사용자A</th>
+      <th>사용자B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td> </td>
+      <td>BEGIN</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>select * where first_name=’마이클’</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>-&gt;결과 없음</td>
+    </tr>
+    <tr>
+      <td>BEGIN</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>update set first_name=’마이클’ where emp_no=500</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>COMMIT</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>select * where first_name=’마이클’</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>-&gt;결과 1건</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<blockquote>
+  <p>사용자 B가 begin명령으로 트랜잭션을 시작하고 first_name이 마이클인 사용자를 검색했는데 일치하는 결과가 없었다. 하지만 사용자 A가 사원번호 500인 사원의 이름을 마이클로 변경하고 커밋을 실행한 후, 사용자 B는 똑같은 select쿼리로 다시 조회하면 이번에는 결과가 1건 조회된다. 이는 사용자 B가 하나의 트랜잭션내에서 똑같은 select 쿼리를 실행했을 때 항상 같은 결과를 가져와야 한다는 REPEATABLE READ 정합성에 어긋하는 것이다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h1 id="repeatable-read">REPEATABLE READ</h1>
+<blockquote>
+  <p>REPEATABLE READ 는 MySQL의 InnoDB 스토리지 엔진에서 기본적으로 사용되는 격리 수준이다. 바이너리 로그를 가진 MySQL의 장비에서는 최소 REPEATABLE READ 격리 수준 이상을 사용해야 한다. 이 격리 수준에서는 READ COMMITTED 격리 수준에서발생하는 NON-REPEATABLE READ 부정합이 발생하지 않는다. InnoDB 스토리지 엔진은 트랜잭션이 ROLLBACK될 가능성에 대비해 변경되기 전 레코드를 언두(Undo)공간에 백업해두고 실제 레코드 값을 변경한다.</p>
+</blockquote>
+
+<blockquote>
+  <p>REPEATABLE READ와 READ COMMITTED의 차이는 언두영역에 백업된 레코드의 여러 버전 가운데 몇 번째 이전 버전까지 찾아 들어가야 하는지에 있다.</p>
+</blockquote>
+
+<blockquote>
+  <p>모든 InnoDB의 트랜잭션은 고유한 트랜잭션 번호(순차적으로 증가하는 값)를 가지며, 언두 영역에 백업된 모든 레코드에는 변경을 발생시킨 트랜잭션의 번호가 포함돼 있습니다. 그리고 언두 영역의 백업된 데이터는 InnoDB스토리지 엔진이 불필요하다고 판단하는 시점에 주기적으로 삭제한다. REPEATABLE READ 격리 수준에서는 MVCC를 보장하기 위해 실행중인 트랜잭션 가운데 가장 오래된 트랜잭션 번호보다 트랜잭션 보호가 앞선 언두 영역의 데이터는 삭제할 수가 없다. 그렇다고 가장 오래된 트랜잭션 번호 이전의 트랜잭션에 의해 변경된 모든 언두 데이터가 필요한 것은 아니다. 정확하게는 특정 트랜잭션 번호의 구간 내에서 백업된 언두 데이터가 보존돼야 하는 것이다.</p>
+</blockquote>
+
+<blockquote>
+  <p>모든 select 쿼리는 트랜잭션 번호가 자신의 트랜잭션번호 보다 작은 트랜잭션 번호에서 변경한 것만 보게 된다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>TRX-ID</th>
+      <th>emp_no</th>
+      <th>first_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>6</td>
+      <td>499</td>
+      <td>홍길동</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>500</td>
+      <td>둘리</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>사용자A</th>
+      <th>테이블</th>
+      <th>사용자B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>BEGIN TRX-ID : 10</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>select * where emp_no=500</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>결과 1건(둘리)</td>
+    </tr>
+    <tr>
+      <td>BEGIN TRX-ID : 12</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>update set first_name=’마이클’ where emp_no=500</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>employees 테이블 emp_no=500 인 레코드 -&gt; TRX-ID : 12 ,emp_no=500, first_name=’마이클’</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>Undo영역 -&gt; TRX-ID : 6 ,emp_no=500, first_name=’둘리’</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>COMMIT</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>select * where emp_no=500</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>변경전 데이터가 백업된 Undo 영역에 있는 결과(‘둘리’) 결과 리턴</td>
+    </tr>
+  </tbody>
+</table>
+:ET
