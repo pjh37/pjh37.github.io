@@ -1,0 +1,115 @@
+I"42<h1 id="트리-순회이진-트리-기준">트리 순회(이진 트리 기준)</h1>
+
+<p><a href="https://www.acmicpc.net/problem/1991">백준 1991</a></p>
+
+<h2 id="node-class">Node class</h2>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Node</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">char</span> <span class="n">data</span><span class="p">;</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">left</span><span class="p">;</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">right</span><span class="p">;</span>
+
+    <span class="n">Node</span><span class="p">(</span><span class="kt">char</span> <span class="n">data</span><span class="p">)</span><span class="o">:</span><span class="n">data</span><span class="p">(</span><span class="n">data</span><span class="p">),</span><span class="n">left</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">),</span><span class="n">right</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">){}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="tree-class">Tree class</h2>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Tree</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">Node</span><span class="o">*</span> <span class="n">root</span><span class="p">;</span>
+    <span class="n">Tree</span><span class="p">()</span><span class="o">:</span><span class="n">root</span><span class="p">(</span><span class="nb">nullptr</span><span class="p">){}</span>
+    <span class="kt">void</span> <span class="n">add</span><span class="p">(</span><span class="kt">char</span> <span class="n">data</span><span class="p">,</span> <span class="kt">char</span> <span class="n">left</span><span class="p">,</span> <span class="kt">char</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+    	<span class="k">if</span> <span class="p">(</span><span class="n">root</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+    	    <span class="n">root</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+    	    <span class="k">if</span> <span class="p">(</span><span class="n">left</span> <span class="o">!=</span> <span class="sc">'.'</span><span class="p">)</span> <span class="p">{</span>
+    	    	<span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">left</span><span class="p">);</span>
+    	    <span class="p">}</span>
+    	    <span class="k">if</span> <span class="p">(</span><span class="n">right</span> <span class="o">!=</span> <span class="sc">'.'</span><span class="p">)</span> <span class="p">{</span>
+    		    <span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">right</span><span class="p">);</span>
+    	    <span class="p">}</span>
+    	<span class="p">}</span>
+    	<span class="k">else</span> <span class="p">{</span>
+    		<span class="n">search</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+    	<span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kt">void</span> <span class="n">preOrder</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">cur</span><span class="p">)</span> <span class="p">{</span>
+    	<span class="k">if</span> <span class="p">(</span><span class="n">cur</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span><span class="k">return</span><span class="p">;</span>
+    	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+    	<span class="n">preOrder</span><span class="p">(</span><span class="n">cur</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+    	<span class="n">preOrder</span><span class="p">(</span><span class="n">cur</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">postOrder</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">cur</span><span class="p">)</span> <span class="p">{</span>
+    	<span class="k">if</span> <span class="p">(</span><span class="n">cur</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span><span class="k">return</span><span class="p">;</span>
+    	<span class="n">postOrder</span><span class="p">(</span><span class="n">cur</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+    	<span class="n">postOrder</span><span class="p">(</span><span class="n">cur</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+    	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">inOrder</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">cur</span><span class="p">)</span> <span class="p">{</span>
+    	<span class="k">if</span> <span class="p">(</span><span class="n">cur</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span><span class="k">return</span><span class="p">;</span>
+    	<span class="n">inOrder</span><span class="p">(</span><span class="n">cur</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">);</span>
+    	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+    	<span class="n">inOrder</span><span class="p">(</span><span class="n">cur</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="nl">private:</span>
+    <span class="kt">void</span> <span class="n">search</span><span class="p">(</span><span class="n">Node</span><span class="o">*</span> <span class="n">root</span><span class="p">,</span> <span class="kt">char</span> <span class="n">data</span><span class="p">,</span> <span class="kt">char</span> <span class="n">left</span><span class="p">,</span> <span class="kt">char</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+    	<span class="k">if</span> <span class="p">(</span><span class="n">root</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+    	    <span class="k">return</span><span class="p">;</span>
+    	<span class="p">}</span>
+    	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">==</span> <span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+    	    <span class="k">if</span> <span class="p">(</span><span class="n">left</span> <span class="o">!=</span> <span class="sc">'.'</span><span class="p">)</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">left</span><span class="p">);</span>
+    	    <span class="k">if</span> <span class="p">(</span><span class="n">right</span> <span class="o">!=</span> <span class="sc">'.'</span><span class="p">)</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Node</span><span class="p">(</span><span class="n">right</span><span class="p">);</span>
+    	<span class="p">}</span>
+    	<span class="k">else</span> <span class="p">{</span>
+    	    <span class="n">search</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">left</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+    	    <span class="n">search</span><span class="p">(</span><span class="n">root</span><span class="o">-&gt;</span><span class="n">right</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+    	<span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="n">ios_base</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">Tree</span><span class="o">*</span> <span class="n">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Tree</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">node</span> <span class="o">&gt;&gt;</span> <span class="n">L</span> <span class="o">&gt;&gt;</span> <span class="n">R</span><span class="p">;</span>
+    	<span class="n">tree</span><span class="o">-&gt;</span><span class="n">add</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">R</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">tree</span><span class="o">-&gt;</span><span class="n">preOrder</span><span class="p">(</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">root</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="n">tree</span><span class="o">-&gt;</span><span class="n">inOrder</span><span class="p">(</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">root</span><span class="p">);</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="n">tree</span><span class="o">-&gt;</span><span class="n">postOrder</span><span class="p">(</span><span class="n">tree</span><span class="o">-&gt;</span><span class="n">root</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<ul>
+  <li>
+    <h3 id="전위-순회--정점---왼쪽---오른쪽">전위 순회 : 정점 -&gt; 왼쪽 -&gt; 오른쪽</h3>
+  </li>
+  <li>
+    <h3 id="중위-순회--왼쪽---정점---오른쪽">중위 순회 : 왼쪽 -&gt; 정점 -&gt; 오른쪽</h3>
+  </li>
+  <li>
+    <h3 id="후위-순회--왼쪽---오른쪽---정점">후위 순회 : 왼쪽 -&gt; 오른쪽 -&gt; 정점</h3>
+  </li>
+</ul>
+:ET

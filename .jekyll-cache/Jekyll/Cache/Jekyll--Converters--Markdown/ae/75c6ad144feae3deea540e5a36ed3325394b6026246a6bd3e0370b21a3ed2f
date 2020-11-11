@@ -1,0 +1,36 @@
+I"x<h1 id="spring-security-아키텍처">Spring security 아키텍처</h1>
+
+<h2 id="securitycontextholder와-authentication">SecurityContextHolder와 Authentication</h2>
+<ul>
+  <li>
+    <h3 id="securitycontextholder">SecurityContextHolder</h3>
+    <ul>
+      <li>
+        <h3 id="securitycontext제공-기본적으로-threadlocal을-사용한다">SecurityContext제공, 기본적으로 <a href="https://pjh37.github.io/java/2020/10/18/java-8.html" title="ThreadLocal">ThreadLocal</a>을 사용한다.</h3>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h3 id="securitycontext">SecurityContext</h3>
+    <ul>
+      <li>
+        <h3 id="authentication-제공">Authentication 제공</h3>
+        <p><img src="https://user-images.githubusercontent.com/37110261/96367014-3bb5eb80-1186-11eb-8af1-b59523d39a19.PNG" alt="security" /></p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="authentication">Authentication</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ ### Priincipal과 GrantAuthority제공 ### Principal
++ ### "누구"에 해당하는 정보
++ ### UserDetailsService에서 리턴한 그 객체
++ ### 객체는 UserDetails 타입 ### GrantAuthority
++ ### "ROLE_USER","ROLE_ADMIN"등 Principal이 가지고 있는 "권한"을 나타낸다.
++ ### 인증 이후, 인가 및 권한 확인할때 이 정보를 참조한다. ### UserDetails
++ ### 애플리케이션이 가지고 있는 유저 정보와 스프링 시큐리티가 사용하는 Authentication객체 사이의 어댑터. ### UserDetailsService
++ ### 유저 정보를 UserDetails타입으로 가져오는 DAO인터페이스
+</code></pre></div></div>
+:ET

@@ -1,0 +1,241 @@
+I"J7<h1 id="배포-자동화-구성">배포 자동화 구성</h1>
+
+<p><br />
+<img src="https://user-images.githubusercontent.com/37110261/95748408-e9338580-0cd4-11eb-8b4d-c92771ab118e.PNG" alt="script경로" /></p>
+
+<h2 id="deploysh">deploy.sh</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="nv">REPOSITORY</span><span class="o">=</span>/home/ec2-user/<span class="o">{</span>앱이있는 경로<span class="o">}</span>
+<span class="nv">PROJECT_NAME</span><span class="o">={</span>자신의 프로젝트 이름<span class="o">}</span>
+
+<span class="nb">echo</span> <span class="s2">"&gt; Build 파일 복사"</span>
+
+<span class="nb">cp</span> <span class="nv">$REPOSITORY</span>/zip/<span class="k">*</span>.jar <span class="nv">$REPOSITORY</span>/
+
+<span class="nb">echo</span> <span class="s2">"&gt; 현재 구동중인 애플리케이션 pid확인"</span>
+
+<span class="nv">CURRENT_PID</span><span class="o">=</span><span class="si">$(</span>pgrep <span class="nt">-fl</span> pjh-server | <span class="nb">grep </span>jar | <span class="nb">awk</span> <span class="s1">'{print $1}'</span><span class="si">)</span>
+
+<span class="nb">echo</span> <span class="s2">"현재 구동중인 애플리케이션 pid : </span><span class="nv">$CURRENT_PID</span><span class="s2">"</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="nt">-z</span> <span class="s2">"</span><span class="nv">$CURRENT_PID</span><span class="s2">"</span>  <span class="o">]</span><span class="p">;</span>  <span class="k">then
+  </span><span class="nb">echo</span> <span class="s2">"&gt; 현재 구동 중인 애플리케이션이 없으므로 종료하지 않습니다."</span>
+<span class="k">else
+  </span><span class="nb">echo</span> <span class="s2">"&gt; kill -15 </span><span class="nv">$CURRENT_PID</span><span class="s2">"</span>
+  <span class="nb">kill</span> <span class="nt">-15</span> <span class="nv">$CURRENT_PID</span>
+  <span class="nb">sleep </span>5
+<span class="k">fi
+
+</span><span class="nb">echo</span> <span class="s2">"&gt; 새 애플리케이션 배포"</span>
+
+<span class="nv">JAR_NAME</span><span class="o">=</span><span class="si">$(</span><span class="nb">ls</span> <span class="nt">-tr</span> <span class="nv">$REPOSITORY</span>/<span class="k">*</span>.jar | <span class="nb">tail</span> <span class="nt">-n</span> 1<span class="si">)</span>
+
+<span class="nb">echo</span> <span class="s2">"&gt; JAR Name: </span><span class="nv">$JAR_NAME</span><span class="s2">"</span>
+
+<span class="nb">echo</span> <span class="s2">"&gt; </span><span class="nv">$JAR_NAME</span><span class="s2"> 에 실행권한 추가"</span>
+
+<span class="nb">chmod</span> +x <span class="nv">$JAR_NAME</span>
+
+<span class="nb">echo</span> <span class="s2">"&gt; </span><span class="nv">$JAR_NAME</span><span class="s2"> 실행"</span>
+
+<span class="nb">nohup </span>java <span class="nt">-jar</span> <span class="se">\</span>
+    <span class="nt">-Dspring</span>.config.location<span class="o">=</span>classpath:/application.properties,
+    classpath:application-real.properties,/home/ec2-user/app/application-real-db.properties <span class="se">\</span>
+    <span class="nt">-Dspring</span>.profiles.active<span class="o">=</span>real <span class="se">\</span>
+    <span class="nv">$JAR_NAME</span> <span class="o">&gt;</span> <span class="nv">$REPOSITORY</span>/nohup.out 2&gt;&amp;1 &amp; 
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p>코드 설명</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> <span class="nv">$REPOSITORY</span>/zip/<span class="k">*</span>.jar <span class="nv">$REPOSITORY</span>/
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h3 id="repositoryzip-경로에-있는-jar을-repository경로로-복사한다">$REPOSITORY/zip 경로에 있는 *.jar을 $REPOSITORY경로로 복사한다.</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CURRENT_PID</span><span class="o">=</span><span class="si">$(</span>pgrep <span class="nt">-fl</span> pjh-server | <span class="nb">grep </span>jar | <span class="nb">awk</span> <span class="s1">'{print $1}'</span><span class="si">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h3 id="pgrep-패턴-name을-가지고-있는-프로세스를-찾는다">pgrep [패턴] name을 가지고 있는 프로세스를 찾는다</h3>
+  </li>
+  <li>
+    <h3 id="-f--l-옵션과-함께-사용하면-명령어의-경로를-출력한다">-f: -l 옵션과 함께 사용하면 명령어의 경로를 출력한다.</h3>
+  </li>
+  <li>
+    <h3 id="-l-pid와-함께-일치하는-프로세스의-이름을-출력한다">-l: pid와 함께 일치하는 프로세스의 이름을 출력한다.</h3>
+  </li>
+  <li>
+    <h3 id="grep-패턴-패턴을-검색한다">grep [패턴] 패턴을 검색한다.</h3>
+  </li>
+  <li>
+    <h3 id="awk--여기서는-pgrep--fl-을-하면-1--pid-2--명령어의-경로-등이-출력되는데-print-1은-그-중-첫번째-열인-pid를-출력하라는-소리다">awk : 여기서는 pgrep -fl 을 하면 $1 : pid $2 : 명령어의 경로 등이 출력되는데 print $1은 그 중 첫번째 열인 pid를 출력하라는 소리다.</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[</span> <span class="nt">-z</span> <span class="s2">"</span><span class="nv">$CURRENT_PID</span><span class="s2">"</span>  <span class="o">]</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h3 id="-z-문자열--문자열-길이가-0이면-참">-z [문자열] : 문자열 길이가 0이면 참</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">kill</span> <span class="nt">-15</span> <span class="nv">$CURRENT_PID</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h3 id="kill--15-pid--여기서--15옵션은-소프트웨어-종료-시그널이다">kill -15 [pid] : 여기서 -15옵션은 소프트웨어 종료 시그널이다.</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="si">$(</span><span class="nb">ls</span> <span class="nt">-tr</span> <span class="nv">$REPOSITORY</span>/<span class="k">*</span>.jar | <span class="nb">tail</span> <span class="nt">-n</span> 1<span class="si">)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h3 id="ls--해당-디렉토리의-목록-출력">ls : 해당 디렉토리의 목록 출력</h3>
+  </li>
+  <li>
+    <h3 id="-t--최근-파일-순으로-보여준다">-t : 최근 파일 순으로 보여준다</h3>
+  </li>
+  <li>
+    <h3 id="-r--역순">-r : 역순</h3>
+  </li>
+  <li>
+    <h3 id="-tr-최근-파일의-역순이면-오래된-파일순으로-보여준다는-소리">-tr: 최근 파일의 역순이면 오래된 파일순으로 보여준다는 소리</h3>
+  </li>
+  <li>
+    <h3 id="tail--n-k--뒤에서-k번째것-가져오기">tail -n [k] : 뒤에서 k번째것 가져오기</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod</span> +x <span class="nv">$JAR_NAME</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h3 id="실행을-위한-실행권한-부여">실행을 위한 실행권한 부여</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">nohup </span>java <span class="nt">-jar</span> <span class="se">\</span>
+    <span class="nt">-Dspring</span>.config.location<span class="o">=</span>classpath:/application.properties,classpath:/application-real.properties,/home/ec2-user/app/application-real-db.properties <span class="se">\</span>
+    <span class="nt">-Dspring</span>.profiles.active<span class="o">=</span>real <span class="se">\</span>
+    <span class="nv">$JAR_NAME</span> <span class="o">&gt;</span> <span class="nv">$REPOSITORY</span>/nohup.out 2&gt;&amp;1 &amp;
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h3 id="nohup-쉘스크립트-파일을-데몬형태로-실행시키는-프로그램-터미널-세션이-끊겨도-실행을-멈추지-않고-동작하도록-한다">nohup: 쉘스크립트 파일을 데몬형태로 실행시키는 프로그램 터미널 세션이 끊겨도 실행을 멈추지 않고 동작하도록 한다.</h3>
+  </li>
+  <li>
+    <h3 id="--프로세스를-실행할때-백그라운드에서-동작하도록-만든다">&amp; : 프로세스를 실행할때 백그라운드에서 동작하도록 만든다.</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="travisyml">travis.yml</h1>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">language</span><span class="pi">:</span> <span class="s">java</span>
+<span class="na">jdk</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">openjdk8</span>
+
+<span class="na">branches</span><span class="pi">:</span>
+  <span class="na">only</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">master</span>
+
+<span class="c1"># Travis CI 서버의 Cache 활성화</span>
+<span class="na">cache</span><span class="pi">:</span>
+  <span class="na">directories</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s1">'</span><span class="s">$HOME/.m2/repository'</span>
+    <span class="pi">-</span> <span class="s1">'</span><span class="s">$HOME/.gradle'</span>
+
+<span class="c1"># clean 후 Build (Build시 자동으로 test 수행)</span>
+<span class="na">script</span><span class="pi">:</span> <span class="s2">"</span><span class="s">./gradlew</span><span class="nv"> </span><span class="s">clean</span><span class="nv"> </span><span class="s">build"</span>
+
+<span class="na">before_deploy</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">mkdir -p before-deploy</span> <span class="c1"># zip에 포함시킬 파일들을 담을 디렉토리 생성</span>
+  <span class="pi">-</span> <span class="s">cp scripts/*.sh before-deploy/</span>
+  <span class="pi">-</span> <span class="s">cp appspec.yml before-deploy/</span>
+  <span class="pi">-</span> <span class="s">cp build/libs/*.jar before-deploy/</span>
+  <span class="pi">-</span> <span class="s">cd before-deploy &amp;&amp; zip -r before-deploy *</span> <span class="c1"># before-deploy로 이동후 전체 압축</span>
+  <span class="pi">-</span> <span class="s">cd ../ &amp;&amp; mkdir -p deploy</span> <span class="c1"># 상위 디렉토리로 이동후 deploy 디렉토리 생성</span>
+  <span class="pi">-</span> <span class="s">mv before-deploy/before-deploy.zip deploy/{프로젝트이름}.zip</span>
+
+<span class="na">before_install</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">chmod +x gradlew</span>
+
+<span class="c1"># CI 실행 완료시 메일 알림</span>
+<span class="na">notifications</span><span class="pi">:</span>
+  <span class="na">email</span><span class="pi">:</span>
+    <span class="na">recipients</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="pi">{</span><span class="nv">이메일</span><span class="pi">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h1 id="appspecyml">appspec.yml</h1>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">version</span><span class="pi">:</span> <span class="m">0.0</span>
+<span class="na">os</span><span class="pi">:</span> <span class="s">linux</span>
+<span class="na">files</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">source</span><span class="pi">:</span>  <span class="s">/</span>
+    <span class="na">destination</span><span class="pi">:</span> <span class="s">/home/ec2-user/{압축파일경로}</span>
+    <span class="na">overwrite</span><span class="pi">:</span> <span class="s">yes</span>
+
+<span class="na">permissions</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">object</span><span class="pi">:</span> <span class="s">/</span>
+    <span class="na">pattern</span><span class="pi">:</span> <span class="s2">"</span><span class="s">**"</span>
+    <span class="na">owner</span><span class="pi">:</span> <span class="s">ec2-user</span>
+    <span class="na">group</span><span class="pi">:</span> <span class="s">ec2-user</span>
+
+<span class="na">hooks</span><span class="pi">:</span>
+  <span class="na">ApplicationStart</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">location</span><span class="pi">:</span> <span class="s">deploy.sh</span>
+      <span class="na">timeout</span><span class="pi">:</span> <span class="m">60</span>
+      <span class="na">runas</span><span class="pi">:</span> <span class="s">ec2-user</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h3 id="permissions-codedeploy에서-ec2서버로-넘겨준-파일들을-모두-ec2-user권한을-갖도록-한다">permissions: codeDeploy에서 EC2서버로 넘겨준 파일들을 모두 ec2-user권한을 갖도록 한다.</h3>
+  </li>
+  <li>
+    <h3 id="hooks">hooks</h3>
+    <ul>
+      <li>
+        <h3 id="codedeploy배포-단계에서-실행할-명령어를-지정한다">codeDeploy배포 단계에서 실행할 명령어를 지정한다.</h3>
+      </li>
+      <li>
+        <h3 id="applicationstart라는-단계에서-deploysh를-ec2-user권한으로-실행하게-된다">ApplicationStart라는 단계에서 deploy.sh를 ec2-user권한으로 실행하게 된다.</h3>
+      </li>
+      <li>
+        <h3 id="timeout60으로-스크립트-실행-60초-이상-수행되면-실패가-된다무한정-기다리면-안되기-때문에">timeout:60으로 스크립트 실행 60초 이상 수행되면 실패가 된다.(무한정 기다리면 안되기 때문에)</h3>
+      </li>
+    </ul>
+  </li>
+</ul>
+:ET

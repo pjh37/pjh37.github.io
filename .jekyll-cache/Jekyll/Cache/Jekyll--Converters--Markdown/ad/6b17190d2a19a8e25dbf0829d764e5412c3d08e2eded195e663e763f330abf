@@ -1,0 +1,170 @@
+I"�0<h1 id="redis개념">Redis개념</h1>
+
+<p><br /></p>
+
+<h1 id="redis란">Redis란?</h1>
+
+<h3 id="redis는-고성능-key-value저장소로서-stringlisthashsetsorted-set등-여러-형식의-자료구조를-지원하는-nosql이다">redis는 고성능 key-value저장소로서 String,List,hash,set,sorted set등 여러 형식의 자료구조를 지원하는 NoSQL이다.</h3>
+<h3 id="메모리에-상주하면서-rdbms의-캐시-솔루션으로-사용된다">메모리에 상주하면서 RDBMS의 캐시 솔루션으로 사용된다.</h3>
+
+<p><br /></p>
+
+<h1 id="redis사용용도">Redis사용용도</h1>
+
+<h3 id="redis는-message-queue-shared-memory-remote-dictory용도로-사용할-수-있다-rdbms에서-조회를-했을때">Redis는 Message Queue, Shared Memory, Remote Dictory용도로 사용할 수 있다. RDBMS에서 조회를 했을때</h3>
+<h3 id="구조상-disk에서-데이터를-가져오는데-이는-memory에서-읽는것보다-천배가량-느리다-이때-redis같은-인메모리">구조상 DISK에서 데이터를 가져오는데 이는 Memory에서 읽는것보다 천배가량 느리다. 이때 Redis같은 인메모리</h3>
+<h3 id="key-value솔루션을-사용하여-db의-read연산-부하를-분산시키는것에-가능하다">key-value솔루션을 사용하여 DB의 read연산 부하를 분산시키는것에 가능하다.</h3>
+
+<p><br /></p>
+
+<h1 id="영구성">영구성</h1>
+
+<h3 id="redis는-메모리에-저장되므로-휘발성이다-하지만-disk에-저장할-수-있는-기능이-있다-따라서-redis는-서버가">Redis는 메모리에 저장되므로 휘발성이다. 하지만 disk에 저장할 수 있는 기능이 있다. 따라서 Redis는 서버가</h3>
+<h3 id="다운되도-재시작하고-disk에-저장해놓은-데이터를-다시-읽어들일-수-있어-데이터를-유실시키지-않을-수-있다">다운되도 재시작하고 disk에 저장해놓은 데이터를 다시 읽어들일 수 있어 데이터를 유실시키지 않을 수 있다.</h3>
+
+<p><br /></p>
+
+<h2 id="redis데이터를-disk에-저장하는-2가지-방법">Redis데이터를 Disk에 저장하는 2가지 방법</h2>
+<ul>
+  <li>
+    <h3 id="snapshot">Snapshot</h3>
+    <ul>
+      <li>
+        <h3 id="어떤-특정-시점의-데이터를-disk에-옮겨담는-방식이다">어떤 특정 시점의 데이터를 Disk에 옮겨담는 방식이다.</h3>
+        <ul>
+          <li>
+            <h3 id="blocking방식의-save와-non-blocking방식의-background-save방식이-있다">Blocking방식의 save와 Non-blocking방식의 background-save방식이 있다.</h3>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h3 id="aof">AOF</h3>
+    <ul>
+      <li>
+        <h3 id="redis의-모든-writeupdate연산-자체를-모두-log파일에-기록하는-형태이다">Redis의 모든 write/update연산 자체를 모두 log파일에 기록하는 형태이다.</h3>
+      </li>
+      <li>
+        <h3 id="서버가-재시작할-경우-writeupdate를-순차적으로-재실행-데이터를-복구한다">서버가 재시작할 경우 write/update를 순차적으로 재실행, 데이터를 복구한다.</h3>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<blockquote>
+  <p>Redis공식문서에서 권장사항은 주기적으로 snapshot으로 백업하고 다음 snapshot까지의 저장을 AOF방식을 수행하는 것이다.</p>
+</blockquote>
+
+<p><br /></p>
+
+<h1 id="redis-특징">Redis 특징</h1>
+
+<ul>
+  <li>
+    <h3 id="영속성을-지원하는-인메모리-데이터-저장소">영속성을 지원하는 인메모리 데이터 저장소</h3>
+  </li>
+  <li>
+    <h3 id="읽기-성능-증대를-위한-서버-측-복제를-지원한다">읽기 성능 증대를 위한 서버 측 복제를 지원한다.</h3>
+    <ul>
+      <li>
+        <h3 id="master-slave">master-slave</h3>
+        <ul>
+          <li>
+            <h3 id="redis서버가-다운되는-경우-장애조치-및-높은-읽기성능을-지원하기-위해-슬레이브를-마스터에-연결하고-전체-데이터베이스의-초기-복사본을-받는-masterslave-복제를-지원한다-마스터에서-쓰기가-수행되면-슬레이브-데이터-세트를-실시간으로-업데이트하기-위해-연결된-모든-슬레이브로-전송된다">Redis서버가 다운되는 경우 장애조치 및 높은 읽기성능을 지원하기 위해 슬레이브를 마스터에 연결하고 전체 데이터베이스의 초기 복사본을 받는 master/slave 복제를 지원한다. 마스터에서 쓰기가 수행되면 슬레이브 데이터 세트를 실시간으로 업데이트하기 위해 연결된 모든 슬레이브로 전송된다.</h3>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <h3 id="sharding">Sharding</h3>
+        <ul>
+          <li>
+            <h3 id="테이블-파티셔닝-처럼-같은-테이블-스키마를-가진-데이터를-다수의-데이터베이스에-분산하여-저장하는-방법이다">테이블 파티셔닝 처럼 같은 테이블 스키마를 가진 데이터를 다수의 데이터베이스에 분산하여 저장하는 방법이다.</h3>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h1 id="spring-boot에서-redis-사용하는-방법">Spring boot에서 Redis 사용하는 방법</h1>
+
+<h2 id="spring-boot-gradle-dependency추가">Spring Boot Gradle dependency추가</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">implementation</span> <span class="err">'</span><span class="n">org</span><span class="o">.</span><span class="na">springframework</span><span class="o">.</span><span class="na">boot</span><span class="o">:</span><span class="n">spring</span><span class="o">-</span><span class="n">boot</span><span class="o">-</span><span class="n">starter</span><span class="o">-</span><span class="n">data</span><span class="o">-</span><span class="n">redis</span><span class="err">'</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="config">Config</h2>
+<blockquote>
+  <p>host,port정보는 yml 설정 파일에서 가져옵니다.</p>
+</blockquote>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Configuration</span>
+<span class="nd">@EnableRedisRepositories</span>
+<span class="nd">@EnableRedisHttpSession</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RedisConfig</span> <span class="o">{</span>
+    <span class="nd">@Value</span><span class="o">(</span><span class="s">"${spring.redis.host}"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">redisHost</span><span class="o">;</span>
+
+    <span class="nd">@Value</span><span class="o">(</span><span class="s">"${spring.redis.port}"</span><span class="o">)</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">redisPort</span><span class="o">;</span>
+
+    <span class="nd">@Bean</span>
+    <span class="kd">public</span> <span class="nc">RedisConnectionFactory</span> <span class="nf">redisConnectionFactory</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">LettuceConnectionFactory</span><span class="o">(</span><span class="n">redisHost</span><span class="o">,</span><span class="n">redisPort</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Bean</span>
+    <span class="kd">public</span> <span class="nc">RedisTemplate</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="nf">redisTemplate</span><span class="o">(){</span>
+        <span class="nc">RedisTemplate</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">redisTemplate</span><span class="o">=</span><span class="k">new</span> <span class="nc">RedisTemplate</span><span class="o">&lt;&gt;();</span>
+        <span class="n">redisTemplate</span><span class="o">.</span><span class="na">setConnectionFactory</span><span class="o">(</span><span class="n">redisConnectionFactory</span><span class="o">());</span>
+        <span class="n">redisTemplate</span><span class="o">.</span><span class="na">setDefaultSerializer</span><span class="o">(</span><span class="k">new</span> <span class="nc">GenericJackson2JsonRedisSerializer</span><span class="o">());</span>
+        <span class="k">return</span> <span class="n">redisTemplate</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="저장하기">저장하기</h2>
+
+<blockquote>
+  <p>lombok을 사용해서 DI받았습니다.</p>
+</blockquote>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RequiredArgsConstructor</span>
+<span class="nd">@Controller</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestController</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">RedisTemplate</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">redisTemplate</span><span class="o">;</span>
+
+    <span class="c1">//test.html 페이지에 접속하는 순간 레디스에 RedisMemberDto객체를 저장합니다.</span>
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/test"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">index</span><span class="o">(){</span>
+        <span class="nc">ValueOperations</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">valueOperations</span><span class="o">=</span><span class="n">redisTemplate</span><span class="o">.</span><span class="na">opsForValue</span><span class="o">();</span>
+        <span class="nc">RedisMemberDto</span> <span class="n">redisMemberDto</span><span class="o">=</span><span class="k">new</span> <span class="nc">RedisMemberDto</span><span class="o">();</span>
+        <span class="n">redisMemberDto</span><span class="o">.</span><span class="na">setAge</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+        <span class="n">redisMemberDto</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">"홍길동"</span><span class="o">);</span>
+        <span class="n">valueOperations</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"key"</span><span class="o">,</span><span class="n">redisMemberDto</span><span class="o">);</span>
+
+        <span class="k">return</span> <span class="s">"test"</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//레디스에서 값을 바로 가져와 리턴합니다.</span>
+    <span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/test/student"</span><span class="o">)</span>
+    <span class="nd">@ResponseBody</span>
+    <span class="kd">public</span> <span class="nc">RedisMemberDto</span> <span class="nf">findStudent</span><span class="o">(){</span>
+        <span class="nc">ValueOperations</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">valueOperations</span><span class="o">=</span><span class="n">redisTemplate</span><span class="o">.</span><span class="na">opsForValue</span><span class="o">();</span>
+        <span class="k">return</span> <span class="o">(</span><span class="nc">RedisMemberDto</span><span class="o">)</span><span class="n">valueOperations</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"key"</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="결과">결과</h2>
+
+<p><img src="https://user-images.githubusercontent.com/37110261/94815727-d055e500-0435-11eb-820d-afefd267de93.PNG" alt="redis결과" /></p>
+
+:ET

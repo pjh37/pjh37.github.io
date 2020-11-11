@@ -1,0 +1,73 @@
+I"�<h1 id="트리-부모-찾기">트리 부모 찾기</h1>
+
+<p><a href="https://www.acmicpc.net/problem/11725">백준 11725</a></p>
+
+<p><br /></p>
+
+<ul>
+  <li>
+    <h3 id="정점들을-이어주는-그래프를-만든다">정점들을 이어주는 그래프를 만든다.</h3>
+  </li>
+  <li>
+    <h3 id="root를-시작점으로-하여-bfs를-사용해-자식의-부모-노드를-찾는다">root를 시작점으로 하여 bfs를 사용해 자식의 부모 노드를 찾는다.</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">MAX</span> <span class="o">=</span> <span class="mi">100001</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="n">from</span><span class="p">,</span><span class="n">to</span><span class="p">;</span>
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">tree</span><span class="p">[</span><span class="n">MAX</span><span class="p">];</span>
+<span class="kt">int</span> <span class="n">parent</span><span class="p">[</span><span class="n">MAX</span><span class="p">];</span>
+<span class="kt">bool</span> <span class="n">visited</span><span class="p">[</span><span class="n">MAX</span><span class="p">];</span>
+
+<span class="kt">void</span> <span class="nf">bfs</span><span class="p">(){</span>
+    <span class="c1">//root가 1번부터 시작</span>
+    <span class="n">queue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">q</span><span class="p">;</span>
+    <span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">parent</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">q</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+    	<span class="kt">int</span> <span class="n">now</span> <span class="o">=</span> <span class="n">q</span><span class="p">.</span><span class="n">front</span><span class="p">();</span> <span class="n">q</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+    	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">tree</span><span class="p">[</span><span class="n">now</span><span class="p">].</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    	    <span class="kt">int</span> <span class="n">next</span> <span class="o">=</span> <span class="n">tree</span><span class="p">[</span><span class="n">now</span><span class="p">][</span><span class="n">i</span><span class="p">];</span>
+    	    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">visited</span><span class="p">[</span><span class="n">next</span><span class="p">])</span> <span class="p">{</span>
+    	    	<span class="n">visited</span><span class="p">[</span><span class="n">next</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    	    	<span class="n">parent</span><span class="p">[</span><span class="n">next</span><span class="p">]</span> <span class="o">=</span> <span class="n">now</span><span class="p">;</span><span class="c1">//부모 설정</span>
+    	    	<span class="n">q</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">next</span><span class="p">);</span>
+    	    <span class="p">}</span>
+    	<span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">parent</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">input</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+	    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">from</span> <span class="o">&gt;&gt;</span> <span class="n">to</span><span class="p">;</span>  
+                <span class="c1">//정점들을 이어준다.</span>
+    	<span class="n">tree</span><span class="p">[</span><span class="n">from</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">to</span><span class="p">);</span>
+    	<span class="n">tree</span><span class="p">[</span><span class="n">to</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">from</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">bfs</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">solution</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">input</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="n">ios_base</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+    <span class="n">solution</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

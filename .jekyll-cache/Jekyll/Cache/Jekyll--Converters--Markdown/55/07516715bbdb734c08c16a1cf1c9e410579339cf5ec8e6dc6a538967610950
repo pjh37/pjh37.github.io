@@ -1,0 +1,57 @@
+I"�<h1 id="threadlocal">ThreadLocal</h1>
+
+<h3 id="javalang-패키지에서-제공하는-쓰레드-범위-변수-즉쓰레드-수준의-데이터-저장소">java.lang 패키지에서 제공하는 쓰레드 범위 변수 즉,쓰레드 수준의 데이터 저장소.</h3>
+<ul>
+  <li>
+    <h3 id="같은-쓰레드-내에서만-공유">같은 쓰레드 내에서만 공유</h3>
+  </li>
+  <li>
+    <h3 id="따라서-같은-쓰레드라면-해당-데이터를-메소드-매개변수로-넘겨줄-필요없음">따라서 같은 쓰레드라면 해당 데이터를 메소드 매개변수로 넘겨줄 필요없음.</h3>
+  </li>
+  <li>
+    <h3 id="securitycontextholder의-기본전략이다">SecurityContextHolder의 기본전략이다.</h3>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="사용예시">사용예시</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AccountContext</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">ThreadLocal</span><span class="o">&lt;</span><span class="nc">Account</span><span class="o">&gt;</span> <span class="no">ACCOUNT_THREAD_LOCAL</span><span class="o">=</span><span class="k">new</span> <span class="n">threadLocal</span><span class="o">&lt;&gt;();</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setAccount</span><span class="o">(</span><span class="nc">Account</span> <span class="n">account</span><span class="o">){</span>
+        <span class="no">ACCOUNT_THREAD_LOCAL</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">account</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">Account</span> <span class="nf">getAccount</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="no">ACCOUNT_THREAD_LOCAL</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<h2 id="controller">Controller</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@GetMapping</span><span class="o">(</span><span class="s">"/example"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="nc">String</span> <span class="nf">example</span><span class="o">(</span><span class="nc">Principal</span> <span class="n">principal</span><span class="o">){</span>
+    <span class="nc">AccountContext</span><span class="o">.</span><span class="na">setAccount</span><span class="o">(</span><span class="n">principal</span><span class="o">.</span><span class="na">findByUsername</span><span class="o">(</span><span class="n">principal</span><span class="o">.</span><span class="na">getName</span><span class="o">()));</span>
+    <span class="n">sampleService</span><span class="o">.</span><span class="na">dashboard</span><span class="o">();</span>
+    <span class="k">return</span> <span class="s">"example"</span><span class="o">;</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="service">Service</h2>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Service</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SampleService</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">dashboard</span><span class="o">(){</span>
+        <span class="nc">Account</span> <span class="n">account</span><span class="o">=</span><span class="nc">AccountContext</span><span class="o">.</span><span class="na">getAccount</span><span class="o">();</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">account</span><span class="o">.</span><span class="na">getUsername</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+:ET

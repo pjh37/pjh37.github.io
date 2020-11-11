@@ -1,0 +1,63 @@
+I"�<h1 id="백준-1068-트리">[백준] 1068 트리</h1>
+
+<p><a href="https://www.acmicpc.net/problem/1068">백준 1068</a></p>
+
+<p><br /></p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+</span><span class="k">const</span> <span class="kt">int</span> <span class="n">MAX</span> <span class="o">=</span> <span class="mi">51</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">n</span><span class="p">,</span><span class="n">node</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">deleteNode</span><span class="p">,</span> <span class="n">parent</span><span class="p">[</span><span class="n">MAX</span><span class="p">],</span> <span class="n">root</span><span class="p">;</span>
+
+<span class="c1">// 핵심 로직</span>
+<span class="cm">/*
+매게 변수로 부모 인덱스가 들어간다. 
+parent[i]의미 : i의 부모 
+parent[i] == idx : i의 부모가 idx와 같은가 
+num == 0 ? 1 : num : num이 0개라는 뜻은 자신이 리프노드라는 뜻이다.
+*/</span>
+
+<span class="kt">int</span> <span class="nf">numOfLeaf</span><span class="p">(</span><span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 삭제 노드에 도달하면 0을 반환</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">deleteNode</span> <span class="o">==</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+    	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    	<span class="k">if</span> <span class="p">(</span><span class="n">parent</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+    		<span class="n">num</span> <span class="o">+=</span> <span class="n">numOfLeaf</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    	<span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">num</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">input</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">n</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="p">{</span>
+    	<span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">node</span><span class="p">;</span>
+    	<span class="k">if</span> <span class="p">(</span><span class="n">node</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    		<span class="n">root</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    	<span class="p">}</span>
+    	<span class="n">parent</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">deleteNode</span><span class="p">;</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">numOfLeaf</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">solution</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">input</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="n">ios_base</span><span class="o">::</span><span class="n">sync_with_stdio</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+    <span class="n">cin</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">cout</span><span class="p">.</span><span class="n">tie</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	
+    <span class="n">solution</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+:ET

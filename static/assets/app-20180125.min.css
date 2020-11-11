@@ -32,8 +32,24 @@
     background:#151719
   }
 
-  
+  table{
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:0px solid #ffffff;
+  }
 
+  th{
+    border:2px solid #bdb8b8;
+  }
+
+  td{
+    border:1px solid #bdb8b8;
+  }
+
+  td,th{
+    padding:10px;
+  }
+  
   #sidebar ul{
     padding-top: 80px 0px;
   }
