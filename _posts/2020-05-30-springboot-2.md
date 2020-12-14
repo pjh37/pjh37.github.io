@@ -153,6 +153,11 @@ public class A{
 + ### 필드
 + ### Setter
 
+<br/>
+
+### lombok을 사용할 경우
++ ### 의존성 주입할 필드에 final을 붙히고 @RequireArgsConstructor
+
 ## 어노테이션이 안붙었을 경우에는 어떻게??
 ### Bean이 되는 클래스에 생성자가 오직 하나만 있고 그 생성자의 매개변수가 빈으로 등록이 되어 있다면
 ### 그 Bean을 주입해준다.
