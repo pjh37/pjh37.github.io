@@ -36,8 +36,8 @@
 - name: Linux
   href: /linux/
 
-- name: HTML
-  href: /html/
+- name: FrontEnd
+  href: /frontend/
 
 - name: Database
   href: /database/
