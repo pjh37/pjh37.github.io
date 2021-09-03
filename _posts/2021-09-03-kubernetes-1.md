@@ -5,7 +5,7 @@ date:   2021-09-03
 desc: "kubernetes pod"
 keywords: "Kubernetes"
 categories: [Kubernetes]
-tags: [Kubernetes]
+tags: [kubernetes]
 icon: icon-html
 ---
 
