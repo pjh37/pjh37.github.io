@@ -15,6 +15,9 @@
 - name: Docker
   href: /docker/
 
+- name: Kubernetes
+  href: /kubernetes/
+
 - name: Nodejs
   href: /nodejs/
 
