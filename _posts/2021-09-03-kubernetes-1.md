@@ -3,9 +3,9 @@ layout: post
 title:  " kubernetes pod"
 date:   2021-09-03
 desc: "kubernetes pod"
-keywords: "kubernetes"
-categories: [kubernetes]
-tags: [kubernetes]
+keywords: "Kubernetes"
+categories: [Kubernetes]
+tags: [Kubernetes]
 icon: icon-html
 ---
 
