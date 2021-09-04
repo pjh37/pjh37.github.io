@@ -84,3 +84,163 @@ spec:
                 - containerPort: 해당 컨테이너의 포트
                 - protocol: TCP,UDP등 프로토콜 선택
             - name: 컨테이너의 이름
+
+<br/>
+<br/>
+
+Service
+====
+
+- 사용이유
+    - Pod의 경우 생성될 때 마다 IP가 새로 지정되어 restart때마다 변하기 때문에 고정된 엔드포인트로 호출이 어렵다.
+    - 여러 Pod에 같은 어플리케이션을 운용할 경우 이 Pod들 간의 로드벨런싱을 지원해야 하는데 서비스가 이러한 역할을 한다.
+    - 지정된 IP로 생성가능,로드벨런싱기능,고유한 DNS이름 소유 가능
+
+<br/>
+
+Service Template
+====
+
+``` yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    run: my-nginx
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 80
+    protocol: TCP
+  selector:
+    run: my-nginx
+```
+<br/>
+
+![K8S_Service_architecture](https://user-images.githubusercontent.com/37110261/132088938-23e26f8f-2cdc-427b-ba50-3c529f3e8ead.png)
+
+<br/>
+
+``` yaml
+spec:
+  type: NodePort
+```
+
+- service의 유형
+    - ClusterIP: 디폴트 설정으로 서비스에 클러스터IP(내부IP)를 할당하기때문에 클러스터 내에서는 이 서비스에 접근 가능하지만 외부에서는 접근 불가
+    - NodePort: 모든 노드의 IP와 포트를 통해 접근이 가능해지고 포트는 30000번대를 할당받는다.
+    <img width="392" alt="99ACBB4F5B288E161A" src="https://user-images.githubusercontent.com/37110261/132090735-ab10a7d5-e1c5-4623-ba38-dff2ef119403.png">
+
+    - LoadBalancer: 외부IP를 가지고 있는 로드벨런서 할당, 클러스터 외부에서 접근 가능
+
+<br/>
+
+``` yaml
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 80
+    protocol: TCP
+```
+
+- port: 서비스가 외부에 공개하는 포트
+- targetPort: 실제 Pod가 서비스되는 포트
+- 멀티 포트 기능 지원
+
+<br/>
+
+``` yaml
+selector:
+    run: my-nginx
+```
+
+- Pod중에서 labels값이 run: my-nginx인 Pod쪽으로 서비스 한다.
+
+
+<br/>
+
+Ingress
+====
+- Ingress: HTTP(s)기반의 L7 로드벨런싱 기능 제공 컴포넌트
+- 사용이유
+    - 쿠버네티스에서 서비스는 L4레이어로 TCP단에서 Pod들을 벨런싱하지만 URL path에 따른 서비스 라우팅이 불가능
+    - MSA의 경우 쿠버네티스 서비스 하나가 MSA의 서비스로 표현되는 경우가 많으며 하나의 URL로 나타내지는 경우가 많음
+    - API 게이트웨이 라는게 있지만 API게이트웨이라는 관리할 항목이 늘어나기 때문에 L7레이어단에서 로드벨런싱을 제공하는 Ingress를 사용
+
+<br/>
+
+![ingress](https://user-images.githubusercontent.com/37110261/132091808-6a1bc025-9e12-46b5-a714-41a0148d2023.png)
+
+<br/>
+
+- ex)
+- reservation service
+
+``` yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: reservation-svc
+spec:
+  selector:
+    app: reservation
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+```
+
+- vehicle service
+``` yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicle-svc
+spec:
+  selector:
+    app: vehicle
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+```
+
+- ingress
+
+``` yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: car-sharing-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /reservation/*
+        backend:
+          service:
+            name: reservation-svc
+            port:
+              number: 80
+      - path: /vehicle/*
+        backend:
+          service:
+            name: vehicle-svc
+            port:
+              number: 80
+```
