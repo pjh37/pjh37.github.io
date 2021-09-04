@@ -184,7 +184,7 @@ Ingress
 
 <br/>
 
-- ex)
+ex)
 - reservation service
 
 ``` yaml
