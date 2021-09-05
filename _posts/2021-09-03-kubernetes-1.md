@@ -245,3 +245,37 @@ spec:
             port:
               number: 80
 ```
+
+
+<br/>
+
+Deployment
+====
+
+- 정의: k8s에서 어플리케이션의 단위를 관리하는 컨트롤러이며 k8s의 최소 유닛인 Pod에 대한 기준 스펙을 정의한 Object
+- k8s에서 Pod들을 각각 독립적으로 배포하기보다 Deployment를 통해 생성하는 것을 권장
+
+- Pod의 생성,복제,삭제등의 라이프사이클 관리
+
+<br/>
+
+<img width="386" alt="kubernetes-deployment-static" src="https://user-images.githubusercontent.com/37110261/132118253-f66e147f-dd02-4517-9245-8eb3eb95b33b.png">
+
+<br/>
+<br/>
+
+- Replica의 숫자만큼 Pod수 생성/유지
+
+<br/>
+
+![deployment-diagram-kubernetes](https://user-images.githubusercontent.com/37110261/132117976-105ee4cc-7295-4077-8ff2-8541b9e991c1.gif)
+
+<br/>
+
+- Label Selecotr를 통한 Pod 타겟팅
+- Pod를 따로 삭제해도 다시 생성되므로 지울려면 Deployment를 삭제해야 ReplicaSet,Pod가 삭제된다.
+<br/>
+
+Deployment template
+====
+![k8S_Deployment_main](https://user-images.githubusercontent.com/37110261/132118352-869c8a59-3de0-49a7-ba66-a4970429da58.png)
