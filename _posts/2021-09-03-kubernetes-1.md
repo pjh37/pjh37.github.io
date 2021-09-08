@@ -22,6 +22,13 @@ Kubernetes Object
     - metadata: 오브젝트의 이름,UID,namespace등 오브젝트를 유일하게 구분지어줄 데이터
     - spec: 오브젝트에 대해 어떤 의도하는 상태
 
+<br/>
+
+kubernetes 아키텍처
+====
+
+![아키텍처](https://user-images.githubusercontent.com/37110261/132519199-cba32e81-aa4b-447b-91d3-f96c3c88e401.PNG)
+
 
 Pod
 ====
