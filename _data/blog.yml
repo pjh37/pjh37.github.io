@@ -18,6 +18,9 @@
 - name: Kubernetes
   href: /kubernetes/
 
+- name: Kafka
+  href: /kafka/
+
 - name: Nodejs
   href: /nodejs/
 
