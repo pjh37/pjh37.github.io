@@ -73,3 +73,161 @@ icon: icon-html
 + 프록시 패턴: 접근 제어가 목적
 + 데코레이터 패턴: 새로운 기능 추가가 목적
 
+<br/>
+
+### 프록시 패턴 적용 예제
+
+![화면 캡처 2022-06-25 111921](https://user-images.githubusercontent.com/37110261/175754578-c6aecc34-71c1-47cf-8b99-f325a689ff5b.png)
+
+![화면 캡처 2022-06-25 111902](https://user-images.githubusercontent.com/37110261/175754929-ec2c2511-5174-4c54-afa8-e2d748d64b7e.png)
+
+<br/>
+
+<b>Subject 인터페이스 </b>
+
+```java
+public interface Subject {
+    String operation();
+}
+
+```
+
+<b>RealSubject</b>
+
+```java
+@Slf4j
+public class RealSubject implements Subject{
+    @Override
+    public String operation() {
+        log.info("실제 객체 호출");
+        sleep(1000);
+        return "data";
+    }
+
+    private void sleep(int i) {
+        try {
+            Thread.sleep(i);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+<b>ProxyPatternClient</b>
+
+```java
+public class ProxyPatternClient {
+    private Subject subject;
+
+    public ProxyPatternClient(Subject subject) {
+        this.subject = subject;
+    }
+
+    public void execute(){
+        subject.operation();
+    }
+}
+```
+
+<b>ProxyPatternTest</b>
+
+```java
+public class ProxyPatternTest {
+
+    @Test
+    void noProxyTest(){
+        RealSubject realSubject=new RealSubject();
+        ProxyPatternClient client = new ProxyPatternClient(realSubject);
+        client.execute();
+        client.execute();
+        client.execute();
+    }
+}
+```
+
+```text
+RealSubject - 실제 객체 호출
+RealSubject - 실제 객체 호출
+RealSubject - 실제 객체 호출
+```
+
+이 데이터가 한번 조회하고 변하지 않는 데이터라면 어딘가에 저장하고 이미 조회한 데이터를 사용하는것이
+성능상 좋다. 이런것을 캐시라고 한다.
+프록시 패턴의 주용기능은 접근제어이다. 캐시도 접근 자체를 제어하는 기능 중 하나이다.
+
+<br/>
+
+### 프록시 패턴 적용후 
+
+![화면 캡처 2022-06-25 114409](https://user-images.githubusercontent.com/37110261/175755277-fd243a07-afd4-4701-9448-850cef86605e.png)
+
+<br/>
+
+```java
+@Slf4j
+public class CacheProxy implements Subject{
+    private Subject target;
+    private String cacheValue;
+
+    public CacheProxy(Subject target) {
+        this.target = target;
+    }
+
+    @Override
+    public String operation() {
+        log.info("프록시 호출");
+        if(cacheValue==null){
+            cacheValue=target.operation();
+        }
+        return cacheValue;
+    }
+}
+```
+
++ private Subject target: 클라이언트가 프록시를 호출하면 프록시가 최종적으로 실제 객체를 호출 해야한다. <br> 따라서 내부에 실제 객체의 참조를 가지고 있어야 한다. 이렇게 프록시가 호출하는 대상을 <b>target</b>이라고 한다.
++ operation(): cacheValue에 값이 없으면 실제 객체(target)를 호출해서 값을 구한다. <br> 그리고 구한 값을 cacheValue에 저장하고 반환한다. 만약 cacheValue에 값이 있으면 실제 객체를 전혀 호출하지 않고 캐시 값을 그대로 반환한다.<br> 따라서 처음 조회 이후에는 캐시에서 빠르게 데이터를 조회할 수 있다.
+
+```java
+public class ProxyPatternTest {
+
+    @Test
+    void noProxyTest(){
+        RealSubject realSubject=new RealSubject();
+        ProxyPatternClient client = new ProxyPatternClient(realSubject);
+        client.execute();
+        client.execute();
+        client.execute();
+    }
+
+    @Test
+    void cacheProxy(){
+        Subject subject=new RealSubject();
+        Subject cacheProxy=new CacheProxy(subject);
+        ProxyPatternClient client = new ProxyPatternClient(cacheProxy);
+        client.execute();
+        client.execute();
+        client.execute();
+    }
+}
+```
+
+<b>cacheProxyTest()</b>
+<br/>
+
+realSubject와 cacheProxy를 생성하고 둘을 연결한다. 결과적으로 cacheProxy가 realSubject를 참조하는 런타임 객체 의존 관계가 완성된다. <br> 그리고 client에 realSubject가 아닌 cacheProxy를 주입한다. 이 과정을 통해 client -> cacheProxy -> realSubject런타임 의존 관계가 완성된다.
+
+<br/>
+
+<b>실행 결과 </b>
+```text
+CacheProxy - 프록시 호출
+RealSubject - 실제 객체 호출
+CacheProxy - 프록시 호출
+CacheProxy - 프록시 호출
+```
+
+<br/>
+
+<b>결과 정리</b>
+프록시 패턴의 핵심은 RealSubject코드와 클라이언트 코드를 <b>변경하지 않고</b> 프록시를 도입해서 접근 제어를 했다는 점이다.<br> 그리고 클라이언트 코드의 변경 없이 자유롭게 프록시를 넣고 뺄수 있다. 실제 클라이언트 입장에서는 프록시 객체가 주입되었는지, 실제 객체가 주입됬는지 알 수 없다.
