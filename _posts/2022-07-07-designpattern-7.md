@@ -457,3 +457,10 @@ curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 
 }
 ```
 
+해당 consumer을 통해 데이터의 변경 로그를 받아 볼 수 있으며 payload를 파싱하여 쿼리 전용 모델에 변경 사항을
+반영할 수 있다.
+
+앞선 장/단점에서도 언급된 것처럼 CQRS패턴은 꼭 필요한 경우에만 도입해야 하며 단순 CRUD의 경우 도입하는 비용이 더 많이 들어갈 수 있다.
+
+CQRS 적용 코드 git: https://github.com/pjh37/cqrs_pattern/tree/master/src/main/java/pjh/cqrspattern <br>
+환경 구성을 위한 docker-compose: https://github.com/pjh37/docker-images/blob/master/images/cdc/docker-compose.yml
