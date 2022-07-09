@@ -59,6 +59,8 @@ icon: icon-html
 읽기 디비로 싱크를 맞춰주는지가 CQRS패턴 구현에서 주요 쟁점입니다.
 
 ## 사용기술
+<img width="856" alt="debezium-architecture" src="https://user-images.githubusercontent.com/37110261/178098199-9766a80d-65f2-42dc-9cb8-756a5a233863.png">
+
 + CDC (Change Data Capture)
   + 테이블에 적용되는 삽입, 업데이트 및 삭제 작업을 기록
   + 테이블에 적용되는 CUD(create,update,delete)및 스키마 변경까지 bin-log에 기록되고 이를 읽어서 <br>
@@ -68,6 +70,16 @@ icon: icon-html
     + kafka
     + mysql connector
     + mysql
+
+<br/>
+
+## kafka connect
+Kafka connect는 카프카용 데이터 통합 프레임워크이며 이 때 Kafka connect는 Kafka connector가 동작하도록 실행해주는 프로세스이다. Kafka connector에는 Source connector와 Sink connector가 있다. 간단히 말하면 Source Connector는 Producer의 역할, Sink connector는 Consumer 역할을 한다.
+
+Source Connector : 외부시스템 -> 커넥트 -> 카프카 <br>
+Sink Connector : 카프카 -> 커넥트 -> 외부 시스템 <br>
+
+Debezium은 카프카 커넥트(Kafka Connect) 기반의 플러그인이며 데이터 변경 캡쳐를 위해 사용된다. Debezium Connector for MySQL 를 통해 Source connector를 생성하여 mysql 데이터 변경을 topic에 저장한다.
 
 ```dockerfile
 version: '2'
@@ -133,6 +145,32 @@ services:
 
 <br/>
 
+## mysql 사용자 추가및 권한 확인
+
+```dockerfile
+# 해당 명령어를 통해 docker mysql 컨테이너 내부 접속
+docker exec -it mysql /bin/bash
+```
+
+``` mysql
+use mysql;
+
+// mysqluser 가 추가 되어 있는지 확인
+select host, user from user;
+
+// mysqluser 없으면 생성
+CREATE USER 'mysqluser'@'%' IDENTIFIED BY 'mysqlpw';
+// mysqluser 에게 권한 부여
+GRANT ALL PRIVILEGES ON *.* TO 'mysqluser'@'%';
+```
+
+## kafka connect 확인
+
+```dockerfile
+# 클러스터 생성 여부 확인
+curl http://localhost:8083/
+```
+
 실행된 mysql connector에 mysql과 kafka에 연결할 정보를 등록합니다.
 
 ```json
@@ -166,3 +204,256 @@ curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" 
 + 사용자는 room을 from~to 시간 동안 예약할 수 있다.
 + 사용자는 자신의 예약 history를 볼 수 있다.(취소,등록,변경 등)
 + 어느 room이 인기가 있었는지를 알기 위해 room,from,to등의 정보들을 쿼리한다.
+
+## 실행
++ 예약 생성 요청
++ http://localhost:8080/reservations
+```json
+{
+    "userId":"123",
+    "roomId":"999",
+    "from":"2020-11-10T12:34:30",
+    "to":"2020-12-10T12:37:30"
+}
+```
+
++ reservation table 변경 사항 발생시 kafka listener에서 받는 데이터
++ c,u,d등으로 update,create,delete를 구분하며 payload의 before,after의 값을 이용해 변경 전,후를 파악할 수 있다.
+
+```json
+{
+  "schema": {
+    "type": "struct",
+    "fields": [
+      {
+        "type": "struct",
+        "fields": [
+          {
+            "type": "string",
+            "optional": false,
+            "field": "reservation_id"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "field": "account_id"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "field": "room_id"
+          },
+          {
+            "type": "int64",
+            "optional": true,
+            "name": "io.debezium.time.MicroTimestamp",
+            "version": 1,
+            "field": "start_time"
+          },
+          {
+            "type": "int64",
+            "optional": true,
+            "name": "io.debezium.time.MicroTimestamp",
+            "version": 1,
+            "field": "end_time"
+          }
+        ],
+        "optional": true,
+        "name": "dbserver1.testdb.reservation.Value",
+        "field": "before"
+      },
+      {
+        "type": "struct",
+        "fields": [
+          {
+            "type": "string",
+            "optional": false,
+            "field": "reservation_id"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "field": "account_id"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "field": "room_id"
+          },
+          {
+            "type": "int64",
+            "optional": true,
+            "name": "io.debezium.time.MicroTimestamp",
+            "version": 1,
+            "field": "start_time"
+          },
+          {
+            "type": "int64",
+            "optional": true,
+            "name": "io.debezium.time.MicroTimestamp",
+            "version": 1,
+            "field": "end_time"
+          }
+        ],
+        "optional": true,
+        "name": "dbserver1.testdb.reservation.Value",
+        "field": "after"
+      },
+      {
+        "type": "struct",
+        "fields": [
+          {
+            "type": "string",
+            "optional": false,
+            "field": "version"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "connector"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "name"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "field": "ts_ms"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "name": "io.debezium.data.Enum",
+            "version": 1,
+            "parameters": {
+              "allowed": "true,last,false,incremental"
+            },
+            "default": "false",
+            "field": "snapshot"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "db"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "field": "sequence"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "field": "table"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "field": "server_id"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "field": "gtid"
+          },
+          {
+            "type": "string",
+            "optional": false,
+            "field": "file"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "field": "pos"
+          },
+          {
+            "type": "int32",
+            "optional": false,
+            "field": "row"
+          },
+          {
+            "type": "int64",
+            "optional": true,
+            "field": "thread"
+          },
+          {
+            "type": "string",
+            "optional": true,
+            "field": "query"
+          }
+        ],
+        "optional": false,
+        "name": "io.debezium.connector.mysql.Source",
+        "field": "source"
+      },
+      {
+        "type": "string",
+        "optional": false,
+        "field": "op"
+      },
+      {
+        "type": "int64",
+        "optional": true,
+        "field": "ts_ms"
+      },
+      {
+        "type": "struct",
+        "fields": [
+          {
+            "type": "string",
+            "optional": false,
+            "field": "id"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "field": "total_order"
+          },
+          {
+            "type": "int64",
+            "optional": false,
+            "field": "data_collection_order"
+          }
+        ],
+        "optional": true,
+        "field": "transaction"
+      }
+    ],
+    "optional": false,
+    "name": "dbserver1.testdb.reservation.Envelope"
+  },
+  "payload": {
+    "before": null,
+    "after": {
+      "reservation_id": "9fd18951-4f7b-42d2-8b5e-2601eaf48adf",
+      "account_id": "123",
+      "room_id": "999",
+      "start_time": 1605011670000000,
+      "end_time": 1607603850000000
+    },
+    "source": {
+      "version": "1.9.4.Final",
+      "connector": "mysql",
+      "name": "dbserver1",
+      "ts_ms": 1657368279000,
+      "snapshot": "false",
+      "db": "testdb",
+      "sequence": null,
+      "table": "reservation",
+      "server_id": 1,
+      "gtid": null,
+      "file": "binlog.000056",
+      "pos": 10447,
+      "row": 0,
+      "thread": 365,
+      "query": null
+    },
+    "op": "c",
+    "ts_ms": 1657368279907,
+    "transaction": null
+  }
+}
+```
+
